@@ -10,3 +10,10 @@ def data_and_outcomes(inpatient_scaled_w_imputation, outcomes):
     o = outcomes
     return i.join(o, on=['visit_occurrence_id'], how='inner')
 
+@transform_pandas(
+    Output(rid="ri.vector.main.execute.0a6a3fbc-2fd7-4a34-895f-da47ca8e62eb"),
+    data_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3")
+)
+def unnamed(data_and_outcomes):
+    
+
