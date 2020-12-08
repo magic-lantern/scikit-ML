@@ -8,9 +8,11 @@ from sklearn.decomposition import PCA, IncrementalPCA
 from sklearn import preprocessing
 from sklearn.preprocessing import StandardScaler
 import sklearn.cluster as cluster
-from sklearn.metrics import adjusted_rand_score, adjusted_mutual_info_score
+from sklearn.metrics import adjusted_rand_score, adjusted_mutual_info_score, accuracy_score, confusion_matrix
+from sklearn.base import clone
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+from itertools import combinations
 from pyspark.sql import functions as F
 from pyspark.sql.functions import max, mean, min, stddev, lit, regexp_replace, col
 
@@ -60,6 +62,57 @@ def plot_decision_regions(X, y, classifier, test_idx=None, resolution=0.02):
                     s=100, 
                     label='test set')
 
+class SBS():
+    def __init__(self, estimator, k_features, scoring=accuracy_score,
+                 test_size=0.25, random_state=1):
+        self.scoring = scoring
+        self.estimator = clone(estimator)
+        self.k_features = k_features
+        self.test_size = test_size
+        self.random_state = random_state
+
+    def fit(self, X, y):
+        
+        X_train, X_test, y_train, y_test = \
+            train_test_split(X, y, test_size=self.test_size,
+                             random_state=self.random_state)
+
+        dim = X_train.shape[1]
+        self.indices_ = tuple(range(dim))
+        self.subsets_ = [self.indices_]
+        score = self._calc_score(X_train, y_train, 
+                                 X_test, y_test, self.indices_)
+        self.scores_ = [score]
+
+        while dim > self.k_features:
+            scores = []
+            subsets = []
+
+            for p in combinations(self.indices_, r=dim - 1):
+                score = self._calc_score(X_train, y_train, 
+                                         X_test, y_test, p)
+                scores.append(score)
+                subsets.append(p)
+
+            best = np.argmax(scores)
+            self.indices_ = subsets[best]
+            self.subsets_.append(self.indices_)
+            dim -= 1
+
+            self.scores_.append(scores[best])
+        self.k_score_ = self.scores_[-1]
+
+        return self
+
+    def transform(self, X):
+        return X[:, self.indices_]
+
+    def _calc_score(self, X_train, y_train, X_test, y_test, indices):
+        self.estimator.fit(X_train[:, indices], y_train)
+        y_pred = self.estimator.predict(X_test[:, indices])
+        score = self.scoring(y_test, y_pred)
+        return score
+
 @transform_pandas(
     Output(rid="ri.vector.main.execute.0a6a3fbc-2fd7-4a34-895f-da47ca8e62eb"),
     data_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
@@ -69,14 +122,96 @@ def plot_decision_regions(X, y, classifier, test_idx=None, resolution=0.02):
 def d_and_o_lr(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 
     my_data = data_and_outcomes.select(inpatient_scaled_w_imputation.columns).toPandas()
+    my_data = my_data.drop(columns='visit_occurrence_id')
     my_outcomes = data_and_outcomes.select(outcomes.columns).toPandas()
     y = my_outcomes.bad_outcome
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
-    lr = LogisticRegression(C=100.0, random_state=my_random_state)
-    lr.fit(x_train_std, y_train)
+    lr = LogisticRegression(penalty='none',
+                            random_state=my_random_state,
+                            max_iter=10000)
+    lr.fit(x_train, y_train)
 
-    plot_decision_regions(my_data, y, classifier=lr)
+    y_pred = lr.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print(confmat)
+
+    lr = LogisticRegression(penalty='l1',
+                            solver='saga',
+                            C=100.0,
+                            random_state=my_random_state,
+                            max_iter=10000)
+    lr.fit(x_train, y_train)
+
+    y_pred = lr.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print(confmat)
+
+    lr = LogisticRegression(penalty='l2',
+                            C=1000.0,
+                            random_state=my_random_state,
+                            max_iter=10000)
+    lr.fit(x_train, y_train)
+
+    y_pred = lr.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print(confmat)
+
+    lr = LogisticRegression(penalty='elasticnet',
+                            solver='saga',
+                            l1_ratio=0.0,
+                            C=100.0,
+                            random_state=my_random_state,
+                            max_iter=10000)
+    lr.fit(x_train, y_train)
+
+    y_pred = lr.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print(confmat)
+
+    lr = LogisticRegression(penalty='elasticnet',
+                            solver='saga',
+                            l1_ratio=0.5,
+                            C=100.0,
+                            random_state=my_random_state,
+                            max_iter=10000)
+    lr.fit(x_train, y_train)
+
+    y_pred = lr.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print(confmat)
+
+    lr = LogisticRegression(penalty='elasticnet',
+                            solver='saga',
+                            l1_ratio=1.0,
+                            C=100.0,
+                            random_state=my_random_state,
+                            max_iter=10000)
+    lr.fit(x_train, y_train)
+
+    y_pred = lr.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print(confmat)
+
+    knn = KNeighborsClassifier(n_neighbors=5)
+
+    # selecting features
+    sbs = SBS(knn, k_features=1)
+    sbs.fit(X_train_std, y_train)
+
+    # plotting performance of feature subsets
+    k_feat = [len(k) for k in sbs.subsets_]
+
+    plt.plot(k_feat, sbs.scores_, marker='o')
+    plt.ylim([0.7, 1.02])
+    plt.ylabel('Accuracy')
+    plt.xlabel('Number of features')
+    plt.grid()
+    plt.tight_layout()
+    # plt.savefig('images/04_08.png', dpi=300)
+    plt.show()
+
+    plot_decision_regions(my_data.values, y.values, classifier=lr)
     plt.xlabel('petal length [standardized]')
     plt.ylabel('petal width [standardized]')
     plt.legend(loc='upper left')
