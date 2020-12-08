@@ -11,6 +11,7 @@ import sklearn.cluster as cluster
 from sklearn.metrics import adjusted_rand_score, adjusted_mutual_info_score, accuracy_score, confusion_matrix
 from sklearn.base import clone
 from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from itertools import combinations
 from pyspark.sql import functions as F
@@ -134,6 +135,7 @@ def d_and_o_lr(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 
     y_pred = lr.predict(x_test)
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('lr with no penalty')
     print(confmat)
 
     lr = LogisticRegression(penalty='l1',
@@ -145,17 +147,19 @@ def d_and_o_lr(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 
     y_pred = lr.predict(x_test)
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('lr with saga solver and l1 penalty')
     print(confmat)
 
-    lr = LogisticRegression(penalty='l2',
-                            C=1000.0,
-                            random_state=my_random_state,
-                            max_iter=10000)
-    lr.fit(x_train, y_train)
+lr = LogisticRegression(penalty='l2',
+                        C=100.0,
+                        random_state=my_random_state,
+                        max_iter=10000)
+lr.fit(x_train, y_train)
 
-    y_pred = lr.predict(x_test)
-    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    print(confmat)
+y_pred = lr.predict(x_test)
+confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+print('lr witg l2 penalty')
+print(confmat)
 
     lr = LogisticRegression(penalty='elasticnet',
                             solver='saga',
@@ -167,6 +171,7 @@ def d_and_o_lr(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 
     y_pred = lr.predict(x_test)
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('lr with saga solver and elasticnet penalty l1')
     print(confmat)
 
     lr = LogisticRegression(penalty='elasticnet',
@@ -179,6 +184,7 @@ def d_and_o_lr(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 
     y_pred = lr.predict(x_test)
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('lr with saga solver and elasticnet penalty half l1 and l2')
     print(confmat)
 
     lr = LogisticRegression(penalty='elasticnet',
@@ -191,13 +197,18 @@ def d_and_o_lr(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 
     y_pred = lr.predict(x_test)
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('lr with saga solver and elasticnet penalty l2')
     print(confmat)
 
-    knn = KNeighborsClassifier(n_neighbors=5)
+knn = KNeighborsClassifier(n_neighbors=5)
 
-    # selecting features
-    sbs = SBS(knn, k_features=1)
-    sbs.fit(X_train_std, y_train)
+# selecting features
+sbs = SBS(knn, k_features=1)
+sbs.fit(x_train, y_train)
+y_pred = sbs.predict(x_test)
+confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+print('knn with sequential backward selection')
+print(confmat)
 
     # plotting performance of feature subsets
     k_feat = [len(k) for k in sbs.subsets_]
@@ -227,4 +238,11 @@ def data_and_outcomes(inpatient_scaled_w_imputation, outcomes):
     i = inpatient_scaled_w_imputation
     o = outcomes
     return i.join(o, on=['visit_occurrence_id'], how='inner')
+
+@transform_pandas(
+    Output(rid="ri.vector.main.execute.2c0575e5-4971-47b0-906c-7848edff7f9f"),
+    data_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3")
+)
+def unnamed(data_and_outcomes):
+    
 
