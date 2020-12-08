@@ -202,16 +202,16 @@ def d_and_o_lr(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     print('lr with saga solver and l1 penalty')
     print(confmat)
 
-lr = LogisticRegression(penalty='l2',
-                        C=100.0,
-                        random_state=my_random_state,
-                        max_iter=10000)
-lr.fit(x_train, y_train)
+    lr = LogisticRegression(penalty='l2',
+                            C=100.0,
+                            random_state=my_random_state,
+                            max_iter=10000)
+    lr.fit(x_train, y_train)
 
-y_pred = lr.predict(x_test)
-confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-print('lr witg l2 penalty')
-print(confmat)
+    y_pred = lr.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('lr witg l2 penalty')
+    print(confmat)
 
     lr = LogisticRegression(penalty='elasticnet',
                             solver='saga',
