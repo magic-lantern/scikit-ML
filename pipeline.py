@@ -115,6 +115,58 @@ class SBS():
         return score
 
 @transform_pandas(
+    Output(rid="ri.vector.main.execute.2c0575e5-4971-47b0-906c-7848edff7f9f"),
+    data_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
+    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+)
+def d_and_o_knn(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
+    my_data = data_and_outcomes.select(inpatient_scaled_w_imputation.columns).toPandas()
+    my_data = my_data.drop(columns='visit_occurrence_id')
+    my_outcomes = data_and_outcomes.select(outcomes.columns).toPandas()
+    y = my_outcomes.bad_outcome.values
+    x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
+
+    knn = KNeighborsClassifier(n_neighbors=5)
+
+    # selecting features
+    sbs = SBS(knn, k_features=1)
+    # now see how it does
+    knn.fit(x_train, y_train)
+    y_pred = knn.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('knn 5 with sequential backward selection')
+    print(confmat)
+
+#     knn = KNeighborsClassifier(n_neighbors=10)
+#     # selecting features
+#     sbs = SBS(knn, k_features=1)
+#     sbs.fit(x_train, y_train)
+#     y_pred = sbs.predict(x_test)
+#     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+#     print('knn 10 with sequential backward selection')
+#     print(confmat)
+
+#     # plotting performance of feature subsets
+#     k_feat = [len(k) for k in sbs.subsets_]
+
+#     plt.plot(k_feat, sbs.scores_, marker='o')
+#     plt.ylim([0.7, 1.02])
+#     plt.ylabel('Accuracy')
+#     plt.xlabel('Number of features')
+#     plt.grid()
+#     plt.tight_layout()
+#     # plt.savefig('images/04_08.png', dpi=300)
+#     plt.show()
+
+#     plot_decision_regions(my_data.values, y.values, classifier=lr)
+#     plt.xlabel('petal length [standardized]')
+#     plt.ylabel('petal width [standardized]')
+#     plt.legend(loc='upper left')
+#     plt.tight_layout()
+#     plt.show()
+
+@transform_pandas(
     Output(rid="ri.vector.main.execute.0a6a3fbc-2fd7-4a34-895f-da47ca8e62eb"),
     data_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
     inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
@@ -200,28 +252,7 @@ print(confmat)
     print('lr with saga solver and elasticnet penalty l2')
     print(confmat)
 
-knn = KNeighborsClassifier(n_neighbors=5)
-
-# selecting features
-sbs = SBS(knn, k_features=1)
-sbs.fit(x_train, y_train)
-y_pred = sbs.predict(x_test)
-confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-print('knn with sequential backward selection')
-print(confmat)
-
-    # plotting performance of feature subsets
-    k_feat = [len(k) for k in sbs.subsets_]
-
-    plt.plot(k_feat, sbs.scores_, marker='o')
-    plt.ylim([0.7, 1.02])
-    plt.ylabel('Accuracy')
-    plt.xlabel('Number of features')
-    plt.grid()
-    plt.tight_layout()
-    # plt.savefig('images/04_08.png', dpi=300)
-    plt.show()
-
+    # need to get this to work for visualization of results
     plot_decision_regions(my_data.values, y.values, classifier=lr)
     plt.xlabel('petal length [standardized]')
     plt.ylabel('petal width [standardized]')
@@ -238,11 +269,4 @@ def data_and_outcomes(inpatient_scaled_w_imputation, outcomes):
     i = inpatient_scaled_w_imputation
     o = outcomes
     return i.join(o, on=['visit_occurrence_id'], how='inner')
-
-@transform_pandas(
-    Output(rid="ri.vector.main.execute.2c0575e5-4971-47b0-906c-7848edff7f9f"),
-    data_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3")
-)
-def unnamed(data_and_outcomes):
-    
 
