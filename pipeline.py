@@ -132,8 +132,8 @@ def d_and_o_knn(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     # selecting features
     sbs = SBS(knn, k_features=1)
     # now see how it does
-    knn.fit(x_train, y_train)
-    y_pred = knn.predict(x_test)
+    sbs.fit(x_train, y_train)
+    y_pred = sbs.predict(x_test)
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
     print('knn 5 with sequential backward selection')
     print(confmat)
