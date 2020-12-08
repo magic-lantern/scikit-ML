@@ -122,7 +122,7 @@ class SBS():
 )
 def d_and_o_knn(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     my_data = data_and_outcomes.select(inpatient_scaled_w_imputation.columns).toPandas()
-    my_data = my_data.drop(columns='visit_occurrence_id')
+    my_data = my_data.drop(columns='visit_occurrence_id').values
     my_outcomes = data_and_outcomes.select(outcomes.columns).toPandas()
     y = my_outcomes.bad_outcome.values
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
