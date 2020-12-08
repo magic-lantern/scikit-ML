@@ -253,12 +253,12 @@ def d_and_o_lr(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     print(confmat)
 
     # need to get this to work for visualization of results
-    plot_decision_regions(my_data.values, y.values, classifier=lr)
-    plt.xlabel('petal length [standardized]')
-    plt.ylabel('petal width [standardized]')
-    plt.legend(loc='upper left')
-    plt.tight_layout()
-    plt.show()
+    #plot_decision_regions(my_data.values, y.values, classifier=lr)
+    #plt.xlabel('petal length [standardized]')
+    #plt.ylabel('petal width [standardized]')
+    #plt.legend(loc='upper left')
+    #plt.tight_layout()
+    #plt.show()
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
