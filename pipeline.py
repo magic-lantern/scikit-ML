@@ -1,5 +1,3 @@
-from sklear.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -11,6 +9,8 @@ from sklearn import preprocessing
 from sklearn.preprocessing import StandardScaler
 import sklearn.cluster as cluster
 from sklearn.metrics import adjusted_rand_score, adjusted_mutual_info_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
 from pyspark.sql import functions as F
 from pyspark.sql.functions import max, mean, min, stddev, lit, regexp_replace, col
 
