@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import umap
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from mpl_toolkits import mplot3d
@@ -201,9 +202,10 @@ def lr_rfecv(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.58c8d23e-5558-4347-98c6-e2dc0c7a6ef7"),
     outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c"),
-    pca_rfecv_cols=Input(rid="ri.foundry.main.dataset.c8cf31b6-e5d3-4e91-a06e-d634ec5ce318")
+    pca_rfecv_cols=Input(rid="ri.foundry.main.dataset.c8cf31b6-e5d3-4e91-a06e-d634ec5ce318"),
+    pca_rfecv_cols_umap_embedding=Input(rid="ri.foundry.main.dataset.438c95e7-3842-40a2-a718-4e9826193dd4")
 )
-def pca_rfecv_bad_outcome(pca_rfecv_cols, outcomes):
+def pca_rfecv_bad_outcome(pca_rfecv_cols, outcomes, pca_rfecv_cols_umap_embedding):
     embedding = pca_rfecv_cols.values
     dfo = outcomes.toPandas()
 
