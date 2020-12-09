@@ -13,6 +13,7 @@ from sklearn.base import clone
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.feature_selection import RFE, RFECV
 from itertools import combinations
 from pyspark.sql import functions as F
 from pyspark.sql.functions import max, mean, min, stddev, lit, regexp_replace, col
@@ -297,10 +298,10 @@ def lr_rfe(data_and_outcomes):
     print(rfe.ranking_)
 
 @transform_pandas(
-    Output(rid="ri.vector.main.execute.33254174-b4c7-469d-b1c6-0fe89903eb57"),
+    Output(rid="ri.foundry.main.dataset.32b0e775-ba50-44e2-ae82-5f41ec31a84c"),
     data_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3")
 )
-def lr_rfe_1(data_and_outcomes):
+def lr_rfecv(data_and_outcomes):
     my_data = data_and_outcomes.select(inpatient_scaled_w_imputation.columns).toPandas()
     my_data = my_data.drop(columns='visit_occurrence_id')
     my_outcomes = data_and_outcomes.select(outcomes.columns).toPandas()
