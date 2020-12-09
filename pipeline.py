@@ -205,7 +205,7 @@ def lr_rfecv(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 )
 def pca_rfecv_cols(data_and_outcomes, lr_rfecv):
     df = data_and_outcomes.select(list(lr_rfecv.columns).toPandas()
-    arr = df.values
+    arr = df.values()
     
     pca_all = PCA(random_state=42)
     pca_all.fit(arr)
