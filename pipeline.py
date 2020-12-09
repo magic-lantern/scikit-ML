@@ -292,7 +292,7 @@ def lr_rfe(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     #y_pred = lr.predict(x_test)
     #confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
 
-    rfe = RFE(lr, 40)
+    rfe = RFE(lr, n_features_to_select=40, step=1)
     rfe = rfe.fit(x_train, y_train)
 
     # summarize the selection of the attributes
