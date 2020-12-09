@@ -187,7 +187,7 @@ def lr_rfecv(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 
     y_pred = pipeline.predict(x_test)
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    print('lr with ref cv selection of features')
+    print('lr with ref 10-fold cv selection of features')
     print(confmat)
 
 @transform_pandas(
