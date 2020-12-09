@@ -175,17 +175,20 @@ def lr_rfecv(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
                             C=100.0,
                             random_state=my_random_state,
                             max_iter=10000)
-    #lr.fit(x_train, y_train)
-    #y_pred = lr.predict(x_test)
-    #confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-
     rfecv = RFECV(lr, step=1, cv=5) # defaults, but listed so explicit
-    rfecv = rfecv.fit(x_train, y_train)
+
+    pipeline = Pipeline(steps=[('s',rfecv),('m',lr)])
+    pipeline.fit(x_train, y_train)
 
     # summarize the selection of the attributes
     print(rfecv.support_)
     print(rfecv.ranking_)
     print(x_test.loc[:, rfecv.support_].columns)
+
+    y_pred = pipeline.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('lr with ref cv selection of features')
+    print(confmat)
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.ca533b97-fde4-4d3f-a987-b2372e7f2894"),
