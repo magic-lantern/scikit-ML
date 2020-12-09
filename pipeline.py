@@ -171,12 +171,12 @@ def lr_rfecv(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     y = my_outcomes.bad_outcome
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
+    # setup model and recursive feature eliminator
     lr = LogisticRegression(penalty='l2',
                             C=100.0,
                             random_state=my_random_state,
                             max_iter=10000)
-    rfecv = RFECV(lr, step=1, cv=5) # defaults, but listed so explicit
-
+    rfecv = RFECV(lr, step=1, cv=10)
     pipeline = Pipeline(steps=[('s',rfecv),('m',lr)])
     pipeline.fit(x_train, y_train)
 
