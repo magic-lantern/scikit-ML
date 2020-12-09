@@ -199,6 +199,19 @@ def lr_rfecv(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     return pd.DataFrame(data=pipeline._final_estimator.coef_, columns=x_test.loc[:, rfecv.support_].columns)
 
 @transform_pandas(
+    Output(rid="ri.foundry.main.dataset.c8cf31b6-e5d3-4e91-a06e-d634ec5ce318"),
+    data_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
+    lr_rfecv=Input(rid="ri.foundry.main.dataset.32b0e775-ba50-44e2-ae82-5f41ec31a84c")
+)
+def pca_rfecv_cols(data_and_outcomes, lr_rfecv):
+    arr = data_and_outcomes.select(lr_rfecv.columns).toPandas().values
+    pca_all = PCA(random_state=42)
+    pca_all.fit(arr)
+    pca_all_arr = pca_all.transform(arr)
+
+    return pd.DataFrame(pca_all_arr)
+
+@transform_pandas(
     Output(rid="ri.foundry.main.dataset.ca533b97-fde4-4d3f-a987-b2372e7f2894"),
     data_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
     inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
@@ -262,13 +275,6 @@ def sbs_knn(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 #     plt.legend(loc='upper left')
 #     plt.tight_layout()
 #     plt.show()
-
-@transform_pandas(
-    Output(rid="ri.vector.main.execute.fe76f6a1-801a-4dbd-9d46-67d2de6e3261"),
-    data_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3")
-)
-def unnamed(data_and_outcomes):
-    
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.e0fd8f16-a131-4276-84c7-acc20e7f1829"),
