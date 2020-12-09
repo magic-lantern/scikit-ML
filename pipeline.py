@@ -236,6 +236,7 @@ def lr_rfecv(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     # summarize the selection of the attributes
     print(rfecv.support_)
     print(rfecv.ranking_)
+    print(x_test.loc[:, rfecv.support_].columns)
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.e0fd8f16-a131-4276-84c7-acc20e7f1829"),
