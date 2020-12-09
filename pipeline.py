@@ -204,6 +204,7 @@ def lr_rfecv(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     lr_rfecv=Input(rid="ri.foundry.main.dataset.32b0e775-ba50-44e2-ae82-5f41ec31a84c")
 )
 def pca_rfecv_cols(data_and_outcomes, lr_rfecv):
+    print(lr_rfecv.columns)
     arr = data_and_outcomes.select(lr_rfecv.columns).toPandas().values
     pca_all = PCA(random_state=42)
     pca_all.fit(arr)
