@@ -316,10 +316,10 @@ def lr_rfecv(data_and_outcomes):
     #y_pred = lr.predict(x_test)
     #confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
 
-    rfe = RFE(lr, 40)
-    rfe = rfe.fit(x_train, y_train)
+    rfecv = RFECV(lr, step=1, cv=5) # defaults, but listed so explicit
+    rfecv = rfecv.fit(x_train, y_train)
 
     # summarize the selection of the attributes
-    print(rfe.support_)
-    print(rfe.ranking_)
+    print(rfecv.support_)
+    print(rfecv.ranking_)
 
