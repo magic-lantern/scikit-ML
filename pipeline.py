@@ -14,6 +14,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.feature_selection import RFE, RFECV
+from sklearn.pipeline import Pipeline
 from itertools import combinations
 from pyspark.sql import functions as F
 from pyspark.sql.functions import max, mean, min, stddev, lit, regexp_replace, col
@@ -288,16 +289,19 @@ def lr_rfe(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
                             C=100.0,
                             random_state=my_random_state,
                             max_iter=10000)
-    #lr.fit(x_train, y_train)
-    #y_pred = lr.predict(x_test)
-    #confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-
     rfe = RFE(lr, n_features_to_select=40, step=1)
-    rfe = rfe.fit(x_train, y_train)
+
+    pipeline = Pipeline(steps=[('s',rfe),('m',lr)])
+    pipeline.fit(x_train, y_train)
 
     # summarize the selection of the attributes
     print(rfe.support_)
     print(rfe.ranking_)
+
+    y_pred = pipeline.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('lr with ref and 40 features')
+    print(confmat)
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.32b0e775-ba50-44e2-ae82-5f41ec31a84c"),
