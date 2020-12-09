@@ -296,3 +296,29 @@ def lr_rfe(data_and_outcomes):
     print(rfe.support_)
     print(rfe.ranking_)
 
+@transform_pandas(
+    Output(rid="ri.vector.main.execute.33254174-b4c7-469d-b1c6-0fe89903eb57"),
+    data_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3")
+)
+def lr_rfe_1(data_and_outcomes):
+    my_data = data_and_outcomes.select(inpatient_scaled_w_imputation.columns).toPandas()
+    my_data = my_data.drop(columns='visit_occurrence_id')
+    my_outcomes = data_and_outcomes.select(outcomes.columns).toPandas()
+    y = my_outcomes.bad_outcome
+    x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
+
+    lr = LogisticRegression(penalty='l2',
+                            C=100.0,
+                            random_state=my_random_state,
+                            max_iter=10000)
+    #lr.fit(x_train, y_train)
+    #y_pred = lr.predict(x_test)
+    #confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+
+    rfe = RFE(lr, 40)
+    rfe = rfe.fit(x_train, y_train)
+
+    # summarize the selection of the attributes
+    print(rfe.support_)
+    print(rfe.ranking_)
+
