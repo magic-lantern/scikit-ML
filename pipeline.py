@@ -166,34 +166,34 @@ def lr_rfe(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
 )
 def lr_rfecv(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
-my_data = data_and_outcomes.select(inpatient_scaled_w_imputation.columns).toPandas()
-my_data = my_data.drop(columns='visit_occurrence_id')
-my_outcomes = data_and_outcomes.select(outcomes.columns).toPandas()
-y = my_outcomes.bad_outcome
-x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
+    my_data = data_and_outcomes.select(inpatient_scaled_w_imputation.columns).toPandas()
+    my_data = my_data.drop(columns='visit_occurrence_id')
+    my_outcomes = data_and_outcomes.select(outcomes.columns).toPandas()
+    y = my_outcomes.bad_outcome
+    x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
-# setup model and recursive feature eliminator
-lr = LogisticRegression(penalty='l2',
-                        C=100.0,
-                        random_state=my_random_state,
-                        max_iter=10000)
-rfecv = RFECV(lr, step=1, cv=10)
-pipeline = Pipeline(steps=[('s',rfecv),('m',lr)])
-pipeline.fit(x_train, y_train)
+    # setup model and recursive feature eliminator
+    lr = LogisticRegression(penalty='l2',
+                            C=100.0,
+                            random_state=my_random_state,
+                            max_iter=10000)
+    rfecv = RFECV(lr, step=1, cv=10)
+    pipeline = Pipeline(steps=[('s',rfecv),('m',lr)])
+    pipeline.fit(x_train, y_train)
 
-# summarize the selection of the attributes
-print(rfecv.support_)
-print(rfecv.ranking_)
-print(x_test.loc[:, rfecv.support_].columns)
-print('coefficients:', pipeline._final_estimator.coef_)
+    # summarize the selection of the attributes
+    print(rfecv.support_)
+    print(rfecv.ranking_)
+    print(x_test.loc[:, rfecv.support_].columns)
+    print('coefficients:', pipeline._final_estimator.coef_)
 
-y_pred = pipeline.predict(x_test)
-confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-print('lr with rfe 10-fold cv selection of features')
-print(confmat)
+    y_pred = pipeline.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('lr with rfe 10-fold cv selection of features')
+    print(confmat)
 
-lr_disp = plot_roc_curve(pipeline._final_estimator, x_test.loc[:, rfecv.support_], y_test)
-plt.show()
+    lr_disp = plot_roc_curve(pipeline._final_estimator, x_test.loc[:, rfecv.support_], y_test)
+    plt.show()
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.ca533b97-fde4-4d3f-a987-b2372e7f2894"),
