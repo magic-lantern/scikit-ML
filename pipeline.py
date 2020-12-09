@@ -203,6 +203,7 @@ def lr_rfe(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     # summarize the selection of the attributes
     print(rfe.support_)
     print(rfe.ranking_)
+    print(x_test.loc[:, rfe.support_].columns)
 
     y_pred = pipeline.predict(x_test)
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
