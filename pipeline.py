@@ -195,8 +195,8 @@ def lr_rfecv(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     lr_disp = plot_roc_curve(pipeline._final_estimator, x_test.loc[:, rfecv.support_], y_test)
     plt.show()
 
-    # return dataframe with relevant features
-    return x_test.loc[:, rfecv.support_]
+    # return dataframe with relevant features and associated coefficients
+    return pd.DataFrame(data=pipeline._final_estimator.coef_, columns=x_test.loc[:, rfecv.support_].columns)
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.ca533b97-fde4-4d3f-a987-b2372e7f2894"),
