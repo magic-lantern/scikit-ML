@@ -184,6 +184,7 @@ def lr_rfecv(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     print(rfecv.support_)
     print(rfecv.ranking_)
     print(x_test.loc[:, rfecv.support_].columns)
+    print('coefficients:', pipeline._final_estimator.coef_)
 
     y_pred = pipeline.predict(x_test)
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
