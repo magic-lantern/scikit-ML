@@ -155,7 +155,7 @@ def lr_rfe(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 
     y_pred = pipeline.predict(x_test)
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    print('lr with ref and 40 features')
+    print('lr with rfe and 40 features')
     print(confmat)
 
 @transform_pandas(
