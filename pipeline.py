@@ -637,7 +637,7 @@ def rf_best_feat( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imput
     #ax2.set_xticklabels(my_data.columns[indices])
     #plt.xticks(range(x_train.shape[1]), my_data.columns[indices], rotation=90)
     ax2.set_xticks(range(x_train.shape[1]))
-    ax2.set_xticklabels(list(my_data.columns[indices]), rotation=-45, ha='left', fontsize=10)
+    ax2.set_xticklabels(list(my_data.columns[indices]), rotation=-45, ha='left', fontsize=6)
     ax2.set_xlim([-1, x_train.shape[1]])
 
     plt.subplots_adjust(bottom=0.2)
@@ -678,11 +678,11 @@ def rf_gs( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation):
     print('rf w 500 estimators w/gini')
     print(confmat)
 
-    fpr, tpr, thresholds = roc_curve(y_true=y_test,
-                                     y_score=y_pred)
+    fpr, tpr, thresholds = roc_curve(y_true=y_test, y_score=y_pred)
     print('AUC:', auc(x=fpr, y=tpr))
     print('FPR:', fpr)
     print('TPR:', tpr)
+    print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred)
 
     fig, (ax1, ax2) = plt.subplots(2, figsize=(7,10))
     fig.tight_layout(h_pad=4)
@@ -698,7 +698,7 @@ def rf_gs( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation):
     #ax2.set_xticklabels(my_data.columns[indices])
     #plt.xticks(range(x_train.shape[1]), my_data.columns[indices], rotation=90)
     ax2.set_xticks(range(x_train.shape[1]))
-    ax2.set_xticklabels(list(my_data.columns[indices]), rotation=-45, ha='left', fontsize=10)
+    ax2.set_xticklabels(list(my_data.columns[indices]), rotation=-45, ha='left', fontsize=6)
     ax2.set_xlim([-1, x_train.shape[1]])
 
     plt.subplots_adjust(bottom=0.2)
