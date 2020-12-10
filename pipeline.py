@@ -792,6 +792,13 @@ def sbs_knn(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 #     plt.show()
 
 @transform_pandas(
+    Output(rid="ri.vector.main.execute.986a8d6e-22c3-4d4e-9994-01c4359f9473"),
+    data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3")
+)
+def unnamed(data_scaled_and_outcomes):
+    
+
+@transform_pandas(
     Output(rid="ri.foundry.main.dataset.e0fd8f16-a131-4276-84c7-acc20e7f1829"),
     data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
     inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
