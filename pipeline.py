@@ -502,7 +502,8 @@ def rf_best_feat( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imput
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
     rf = RandomForestClassifier(n_estimators=500,
-                                random_state=my_random_state)
+                                random_state=my_random_state,
+                                criterion='gini')
     rf.fit(x_train, y_train)
 
     # summarize the selection of the attributes
@@ -515,7 +516,7 @@ def rf_best_feat( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imput
                                 importances[indices[f]]))
 
     plt.title('Feature Importance')
-    plt.bar(range(X_train.shape[1]), 
+    plt.bar(range(x_train.shape[1]), 
             importances[indices],
             align='center')
 
