@@ -516,6 +516,24 @@ def sbs_knn(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 #     plt.show()
 
 @transform_pandas(
+    Output(rid="ri.vector.main.execute.a82f3318-a7a7-468e-8b4e-4c106dcb7dd0"),
+    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c"),
+    pca_rfecv_cols_umap_embedding=Input(rid="ri.foundry.main.dataset.438c95e7-3842-40a2-a718-4e9826193dd4")
+)
+def pca_rfecv_bad_outcome_1( outcomes, pca_rfecv_cols_umap_embedding):
+    embedding = pca_rfecv_cols_umap_embedding.values
+    dfo = outcomes.toPandas()
+
+    splt = sns.scatterplot(x = embedding[:, 0],
+                            y = embedding[:, 1],
+                            hue = dfo.bad_outcome,
+                            alpha = 0.6)
+    plt.title('PCA w/LR Features UMAP 2D scatter plot')
+    plt.show()
+    
+    return
+
+@transform_pandas(
     Output(rid="ri.foundry.main.dataset.e0fd8f16-a131-4276-84c7-acc20e7f1829"),
     data_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
     inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
