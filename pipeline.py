@@ -531,6 +531,9 @@ def rf_best_feat( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imput
     print('rf w 500 estimators')
     print(confmat)
 
+    rf_disp = plot_roc_curve(rf, x_test, y_test)
+    plt.show()
+
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.ca533b97-fde4-4d3f-a987-b2372e7f2894"),
     data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
