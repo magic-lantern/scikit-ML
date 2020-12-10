@@ -678,6 +678,8 @@ def rf_gs( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation):
     print('rf w 500 estimators w/gini')
     print(confmat)
 
+    y_pred = rf.predict_proba(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
     fpr, tpr, thresholds = roc_curve(y_true=y_test, y_score=y_pred)
     print('AUC:', auc(x=fpr, y=tpr))
     print('FPR:', fpr)
