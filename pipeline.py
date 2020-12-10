@@ -806,10 +806,11 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     y = my_outcomes.bad_outcome
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
+    param_range = [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
     parameters = {
-        'kernel':['linear'],# 'poly', 'rbf', 'sigmoid', 'precomputed'],
-        'gamma': ['scale'],# 'auto', 0.1, 0.2, 1.0, 10.0],
-        'C': [1.0],# 10.0]
+        'kernel':['linear', 'poly', 'rbf', 'sigmoid', 'precomputed'],
+        #'gamma': ['scale', 'auto', 0.1, 0.2, 1.0, 10.0],
+        'C': param_range
     }
 
     svm = SVC(random_state=my_random_state)
