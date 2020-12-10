@@ -397,6 +397,12 @@ def lr_rfecv(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     print('lr with rfe 10-fold cv selection of features')
     print(confmat)
 
+    print('Balanced Accuracy:', balanced_accuracy_score(y_test, y_pred))
+    print('Precision:', precision_score(y_test, y_pred))
+    print('Recall:', recall_score(y_test, y_pred))
+    y_pred = pipeline..predict_proba(x_test)[:, 1]
+    print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
+
     lr_disp = plot_roc_curve(pipeline._final_estimator, x_test.loc[:, rfecv.support_], y_test)
     plt.show()
 
