@@ -487,12 +487,12 @@ def pca_rfecv_site( outcomes, pca_rfecv_cols_umap_embedding):
     return
 
 @transform_pandas(
-    Output(rid="ri.vector.main.execute.c3dec201-8164-4d1f-ada0-25a9aebf1ee2"),
+    Output(rid="ri.foundry.main.dataset.d152ad50-dd8b-4ea2-a0fd-36d3d7ef448d"),
     data_encoded_and_outcomes=Input(rid="ri.foundry.main.dataset.32069249-a675-4faf-9d3c-a68ff0670c07"),
     inpatient_encoded_w_imputation=Input(rid="ri.foundry.main.dataset.d3578a81-014a-49a6-9887-53d296155bdd"),
     outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
 )
-def rf_rfecv( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation):
+def rf_best_feat( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation):
     data_and_outcomes = data_encoded_and_outcomes
     my_data = data_and_outcomes.select(inpatient_encoded_w_imputation.columns).toPandas()
     my_data = my_data.drop(columns='visit_occurrence_id')
