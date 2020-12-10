@@ -14,7 +14,7 @@ from sklearn.base import clone
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.feature_selection import RFE, RFECV
 from sklearn.pipeline import Pipeline
 from itertools import combinations
@@ -520,6 +520,8 @@ def rf_best_feat( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imput
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
     print('rf w 500 estimators w/gini')
     print(confmat)
+    y_pred = rf.predict_proba(x_test)[:, 1]
+    print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
     #########################
 
     rf = RandomForestClassifier(n_estimators=250,
@@ -540,6 +542,8 @@ def rf_best_feat( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imput
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
     print('rf w 250 estimators w/gini')
     print(confmat)
+    y_pred = rf.predict_proba(x_test)[:, 1]
+    print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
     #########################
 
     rf = RandomForestClassifier(n_estimators=100,
@@ -560,6 +564,8 @@ def rf_best_feat( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imput
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
     print('rf w 100 estimators w/gini')
     print(confmat)
+    y_pred = rf.predict_proba(x_test)[:, 1]
+    print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
     #########################
 
     #########################
@@ -581,6 +587,8 @@ def rf_best_feat( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imput
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
     print('rf w 500 estimators w/entropy')
     print(confmat)
+    y_pred = rf.predict_proba(x_test)[:, 1]
+    print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
     #########################
 
     rf = RandomForestClassifier(n_estimators=250,
@@ -601,6 +609,8 @@ def rf_best_feat( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imput
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
     print('rf w 250 estimators w/entropy')
     print(confmat)
+    y_pred = rf.predict_proba(x_test)[:, 1]
+    print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
     #########################
 
     rf = RandomForestClassifier(n_estimators=100,
@@ -621,6 +631,8 @@ def rf_best_feat( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imput
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
     print('rf w 100 estimators w/entropy')
     print(confmat)
+    y_pred = rf.predict_proba(x_test)[:, 1]
+    print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
     #########################
 
     fig, (ax1, ax2) = plt.subplots(2, figsize=(7,10))
@@ -658,51 +670,59 @@ def rf_gs( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation):
     y = my_outcomes.bad_outcome
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
-    #########################
-    rf = RandomForestClassifier(n_estimators=500,
-                                random_state=my_random_state,
-                                criterion='gini')
-    rf.fit(x_train, y_train)
+    parameters = {
+        'n_estimators':[10,100], #,250,500,750],
+        'criterion': ['gini', 'entropy'],
+        'min_samples_splitint': [2]#, 5, 10, 20]
+    }
 
-    # summarize the selection of the attributes
-    importances = rf.feature_importances_
-    indices = np.argsort(importances)[::-1]
+    rf = RandomForestClassifier(random_state=my_random_state)
+    gd = GridSearchCV(estimator=rf, param_grid=parameters, cv=5)
+    gd.fit(x_train, y_train)
+    print(gd.best_params_)
+    
 
-    for f in range(x_train.shape[1]):
-        print("%2d) %-*s %f" % (f + 1, 30, 
-                                my_data.columns[indices[f]], 
-                                importances[indices[f]]))
+    # rf.fit(x_train, y_train)
 
-    y_pred = rf.predict(x_test)
-    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    print('rf w 500 estimators w/gini')
-    print(confmat)
+    # # summarize the selection of the attributes
+    # importances = rf.feature_importances_
+    # indices = np.argsort(importances)[::-1]
 
-    y_pred = rf.predict_proba(x_test)[:, 1]
-    fpr, tpr, thresholds = roc_curve(y_true=y_test, y_score=y_pred)
-    print('AUC:', auc(x=fpr, y=tpr))
-    print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
+    # for f in range(x_train.shape[1]):
+    #     print("%2d) %-*s %f" % (f + 1, 30, 
+    #                             my_data.columns[indices[f]], 
+    #                             importances[indices[f]]))
 
-    fig, (ax1, ax2) = plt.subplots(2, figsize=(7,10))
-    fig.tight_layout(h_pad=4)
+    # y_pred = rf.predict(x_test)
+    # confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    # print('rf w 500 estimators w/gini')
+    # print(confmat)
 
-    rf_disp = plot_roc_curve(rf, x_test, y_test, ax=ax1)
+    # y_pred = rf.predict_proba(x_test)[:, 1]
+    # fpr, tpr, thresholds = roc_curve(y_true=y_test, y_score=y_pred)
+    # print('AUC:', auc(x=fpr, y=tpr))
+    # print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
 
-    ax2.set_title('Feature Importance')
-    ax2.bar(range(x_train.shape[1]), 
-            importances[indices],
-            align='center')
+    # fig, (ax1, ax2) = plt.subplots(2, figsize=(7,10))
+    # fig.tight_layout(h_pad=4)
 
-    #plt.sca(ax2)
-    #ax2.set_xticklabels(my_data.columns[indices])
-    #plt.xticks(range(x_train.shape[1]), my_data.columns[indices], rotation=90)
-    ax2.set_xticks(range(x_train.shape[1]))
-    ax2.set_xticklabels(list(my_data.columns[indices]), rotation=-45, ha='left', fontsize=6)
-    ax2.set_xlim([-1, x_train.shape[1]])
+    # rf_disp = plot_roc_curve(rf, x_test, y_test, ax=ax1)
 
-    plt.subplots_adjust(bottom=0.2)
+    # ax2.set_title('Feature Importance')
+    # ax2.bar(range(x_train.shape[1]), 
+    #         importances[indices],
+    #         align='center')
 
-    plt.show()
+    # #plt.sca(ax2)
+    # #ax2.set_xticklabels(my_data.columns[indices])
+    # #plt.xticks(range(x_train.shape[1]), my_data.columns[indices], rotation=90)
+    # ax2.set_xticks(range(x_train.shape[1]))
+    # ax2.set_xticklabels(list(my_data.columns[indices]), rotation=-45, ha='left', fontsize=6)
+    # ax2.set_xlim([-1, x_train.shape[1]])
+
+    # plt.subplots_adjust(bottom=0.2)
+
+    # plt.show()
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.ca533b97-fde4-4d3f-a987-b2372e7f2894"),
