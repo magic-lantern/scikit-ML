@@ -527,9 +527,9 @@ def rf_best_hyp_params( outcomes, data_encoded_and_outcomes, inpatient_encoded_w
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
     print('rf w 750 estimators w/gini')
     print(confmat)
-    print('Balanced Accuracy:', balanced_accuracy_score(y_true, y_pred))
-    print('Precision:', precision_score(y_true, y_pred))
-    print('Recall:', recall_score(y_true, y_pred))
+    print('Balanced Accuracy:', balanced_accuracy_score(y_test, y_pred))
+    print('Precision:', precision_score(y_test, y_pred))
+    print('Recall:', recall_score(y_test, y_pred))
     y_pred = rf.predict_proba(x_test)[:, 1]
     print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
 
