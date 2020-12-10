@@ -673,7 +673,7 @@ def rf_gs( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation):
     parameters = {
         'n_estimators':[10,100], #,250,500,750],
         'criterion': ['gini', 'entropy'],
-        'min_samples_splitint': [2]#, 5, 10, 20]
+        'min_samples_split': [2]#, 5, 10, 20]
     }
 
     rf = RandomForestClassifier(random_state=my_random_state)
