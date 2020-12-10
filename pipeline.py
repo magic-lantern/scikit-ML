@@ -682,7 +682,7 @@ def rf_gs( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation):
     print('AUC:', auc(x=fpr, y=tpr))
     print('FPR:', fpr)
     print('TPR:', tpr)
-    print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred)
+    print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
 
     fig, (ax1, ax2) = plt.subplots(2, figsize=(7,10))
     fig.tight_layout(h_pad=4)
