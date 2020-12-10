@@ -316,6 +316,16 @@ def data_and_outcomes(inpatient_scaled_w_imputation, outcomes):
     return i.join(o, on=['visit_occurrence_id'], how='inner')
 
 @transform_pandas(
+    Output(rid="ri.foundry.main.dataset.32069249-a675-4faf-9d3c-a68ff0670c07"),
+    inpatient_encoded_w_imputation=Input(rid="ri.foundry.main.dataset.d3578a81-014a-49a6-9887-53d296155bdd"),
+    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+)
+def data_and_outcomes_orig(inpatient_encoded_w_imputation, outcomes):
+    i = inpatient_encoded_w_imputation
+    o = outcomes
+    return i.join(o, on=['visit_occurrence_id'], how='inner')
+
+@transform_pandas(
     Output(rid="ri.foundry.main.dataset.6539e1fc-4c2d-47c1-bc55-96268abaa9ea"),
     data_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
     inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
@@ -576,12 +586,6 @@ def sbs_knn(data_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 #     plt.legend(loc='upper left')
 #     plt.tight_layout()
 #     plt.show()
-
-@transform_pandas(
-    Output(rid="ri.vector.main.execute.cb614403-5543-42ce-bb04-d472e2cbc3a2")
-)
-def unnamed():
-    
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.e0fd8f16-a131-4276-84c7-acc20e7f1829"),
