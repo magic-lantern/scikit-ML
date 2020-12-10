@@ -17,6 +17,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.feature_selection import RFE, RFECV
 from sklearn.pipeline import Pipeline
+from sklearn.svm import SVC
 from itertools import combinations
 from pyspark.sql import functions as F
 from pyspark.sql.functions import max, mean, min, stddev, lit, regexp_replace, col
@@ -792,11 +793,30 @@ def sbs_knn(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 #     plt.show()
 
 @transform_pandas(
-    Output(rid="ri.vector.main.execute.986a8d6e-22c3-4d4e-9994-01c4359f9473"),
-    data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3")
+    Output(rid="ri.foundry.main.dataset.2fceafbf-2355-4cfc-b70b-843b185f2a58"),
+    data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
+    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
 )
-def unnamed(data_scaled_and_outcomes):
-    
+def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
+    data_and_outcomes = data_scaled_and_outcomes
+    my_data = data_and_outcomes.select(inpatient_scaled_w_imputation.columns).toPandas()
+    my_data = my_data.drop(columns='visit_occurrence_id')
+    my_outcomes = data_and_outcomes.select(outcomes.columns).toPandas()
+    y = my_outcomes.bad_outcome
+    x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
+
+    parameters = {
+        'kernel':['linear'],# 'poly', 'rbf', 'sigmoid', 'precomputed'],
+        'gamma': ['scale'],# 'auto', 0.1, 0.2, 1.0, 10.0],
+        'C': [1.0],# 10.0],
+        'max_features' : ['sqrt']#, 'log2']
+    }
+
+    svm = SVC(random_state=my_random_state)
+    gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5)
+    gd.fit(x_train, y_train)
+    print(gd.best_params_)
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.e0fd8f16-a131-4276-84c7-acc20e7f1829"),
