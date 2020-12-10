@@ -13,6 +13,7 @@ from sklearn.metrics import adjusted_rand_score, adjusted_mutual_info_score, acc
 from sklearn.base import clone
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.feature_selection import RFE, RFECV
 from sklearn.pipeline import Pipeline
