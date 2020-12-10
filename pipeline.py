@@ -817,8 +817,11 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
         #'C': param_range
     }
 
-    # run time with default env and cache_size 1600 - 376
-    svm = SVC(kernel='linear', random_state=my_random_state, probability=True, cache_size=1600)
+    # run time with default env and cache_size 1600 - 376 sec
+    # run time with high-mem env and cache_size 1600 - 382  sec
+    # run time with default env and cache_size 800 -  sec
+    # run time with high-mem env and cache_size 800 -  sec    
+    svm = SVC(kernel='linear', random_state=my_random_state, probability=True, cache_size=800)
     #gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5)
     #gd.fit(x_train, y_train)
     #print(gd.best_params_)
