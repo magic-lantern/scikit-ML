@@ -9,7 +9,7 @@ from sklearn.decomposition import PCA, IncrementalPCA
 from sklearn import preprocessing
 from sklearn.preprocessing import StandardScaler
 import sklearn.cluster as cluster
-from sklearn.metrics import confusion_matrix, plot_roc_curve, roc_auc_score, roc_curve, auc, balanced_accuracy_score, precision_score, recall_score
+from sklearn.metrics import confusion_matrix, plot_roc_curve, roc_auc_score, roc_curve, auc, accuracy_score, balanced_accuracy_score, precision_score, recall_score
 from sklearn.base import clone
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
