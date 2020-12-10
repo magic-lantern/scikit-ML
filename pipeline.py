@@ -808,12 +808,12 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
 
     param_range = [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
     parameters = {
-        'kernel':['linear', 'poly', 'rbf', 'sigmoid', 'precomputed'],
+        'kernel':['linear', 'poly', 'rbf', 'sigmoid'],
         #'gamma': ['scale', 'auto', 0.1, 0.2, 1.0, 10.0],
         #'C': param_range
     }
 
-    svm = SVC(kernel='sigmoid', random_state=my_random_state, probability=True, cache_size=800)
+    svm = SVC(kernel='linear', random_state=my_random_state, probability=True, cache_size=1600)
     #gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5)
     #gd.fit(x_train, y_train)
     #print(gd.best_params_)
@@ -822,7 +822,7 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
 
     y_pred = svm.predict(x_test)
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    print('svm w sigmoid kernel')
+    print('svm w linear kernel')
     print(confmat)
 
     y_pred = svm.predict_proba(x_test)[:, 1]
