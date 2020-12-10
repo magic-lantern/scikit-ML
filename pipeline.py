@@ -521,7 +521,7 @@ def rf_best_feat( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imput
             align='center')
 
     plt.xticks(range(x_train.shape[1]), 
-            feat_labels[indices], rotation=90)
+            my_data.columns[indices], rotation=90)
     plt.xlim([-1, x_train.shape[1]])
     plt.tight_layout()
     plt.show()
