@@ -501,6 +501,7 @@ def rf_best_feat( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imput
     y = my_outcomes.bad_outcome
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
+    #########################
     rf = RandomForestClassifier(n_estimators=500,
                                 random_state=my_random_state,
                                 criterion='gini')
@@ -517,8 +518,110 @@ def rf_best_feat( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imput
 
     y_pred = rf.predict(x_test)
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    print('rf w 500 estimators')
+    print('rf w 500 estimators w/gini')
     print(confmat)
+    #########################
+
+    rf = RandomForestClassifier(n_estimators=250,
+                                random_state=my_random_state,
+                                criterion='gini')
+    rf.fit(x_train, y_train)
+
+    # summarize the selection of the attributes
+    importances = rf.feature_importances_
+    indices = np.argsort(importances)[::-1]
+
+    for f in range(x_train.shape[1]):
+        print("%2d) %-*s %f" % (f + 1, 30, 
+                                my_data.columns[indices[f]], 
+                                importances[indices[f]]))
+
+    y_pred = rf.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('rf w 250 estimators w/gini')
+    print(confmat)
+    #########################
+
+    rf = RandomForestClassifier(n_estimators=100,
+                                random_state=my_random_state,
+                                criterion='gini')
+    rf.fit(x_train, y_train)
+
+    # summarize the selection of the attributes
+    importances = rf.feature_importances_
+    indices = np.argsort(importances)[::-1]
+
+    for f in range(x_train.shape[1]):
+        print("%2d) %-*s %f" % (f + 1, 30, 
+                                my_data.columns[indices[f]], 
+                                importances[indices[f]]))
+
+    y_pred = rf.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('rf w 100 estimators w/gini')
+    print(confmat)
+    #########################
+
+    #########################
+    rf = RandomForestClassifier(n_estimators=500,
+                                random_state=my_random_state,
+                                criterion='entropy')
+    rf.fit(x_train, y_train)
+
+    # summarize the selection of the attributes
+    importances = rf.feature_importances_
+    indices = np.argsort(importances)[::-1]
+
+    for f in range(x_train.shape[1]):
+        print("%2d) %-*s %f" % (f + 1, 30, 
+                                my_data.columns[indices[f]], 
+                                importances[indices[f]]))
+
+    y_pred = rf.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('rf w 500 estimators w/entropy')
+    print(confmat)
+    #########################
+
+    rf = RandomForestClassifier(n_estimators=250,
+                                random_state=my_random_state,
+                                criterion='entropy')
+    rf.fit(x_train, y_train)
+
+    # summarize the selection of the attributes
+    importances = rf.feature_importances_
+    indices = np.argsort(importances)[::-1]
+
+    for f in range(x_train.shape[1]):
+        print("%2d) %-*s %f" % (f + 1, 30, 
+                                my_data.columns[indices[f]], 
+                                importances[indices[f]]))
+
+    y_pred = rf.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('rf w 250 estimators w/entropy')
+    print(confmat)
+    #########################
+
+    rf = RandomForestClassifier(n_estimators=100,
+                                random_state=my_random_state,
+                                criterion='entropy')
+    rf.fit(x_train, y_train)
+
+    # summarize the selection of the attributes
+    importances = rf.feature_importances_
+    indices = np.argsort(importances)[::-1]
+
+    for f in range(x_train.shape[1]):
+        print("%2d) %-*s %f" % (f + 1, 30, 
+                                my_data.columns[indices[f]], 
+                                importances[indices[f]]))
+
+    y_pred = rf.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('rf w 100 estimators w/entropy')
+    print(confmat)
+    #########################
 
     fig, (ax1, ax2) = plt.subplots(2, figsize=(7,10))
     fig.tight_layout(h_pad=4)
