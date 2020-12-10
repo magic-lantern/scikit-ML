@@ -22,6 +22,8 @@ from itertools import combinations
 from pyspark.sql import functions as F
 from pyspark.sql.functions import max, mean, min, stddev, lit, regexp_replace, col
 
+import timeit
+
 # set standard random state for repeatability
 my_random_state = 42
 
@@ -799,6 +801,8 @@ def sbs_knn(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
 )
 def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
+    start = timeit.default_timer()
+
     data_and_outcomes = data_scaled_and_outcomes
     my_data = data_and_outcomes.select(inpatient_scaled_w_imputation.columns).toPandas()
     my_data = my_data.drop(columns='visit_occurrence_id')
@@ -830,6 +834,9 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
 
     svm_disp = plot_roc_curve(svm, x_test, y_test)
     plt.show()
+
+    stop = timeit.default_timer()
+    print('Time: ', stop - start)  
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.e0fd8f16-a131-4276-84c7-acc20e7f1829"),
