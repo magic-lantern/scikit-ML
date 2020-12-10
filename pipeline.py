@@ -744,14 +744,18 @@ def rf_gs_1( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
     parameters = {
-        'n_estimators':[100,250,500,750],
+        'n_estimators':[100,250,500,750,1000],
         'criterion': ['gini', 'entropy'],
         'min_samples_split': [2, 5, 10, 20],
         'max_features' : ['sqrt', 'log2']
     }
 
     rf = RandomForestClassifier(random_state=my_random_state)
-    gd = GridSearchCV(estimator=rf, param_grid=parameters, cv=5, n_jobs=5)
+    gd = GridSearchCV(estimator=rf, param_grid=parameters, cv=5, n_jobs=10)
+    # with n_jobs=5
+    # {'criterion': 'gini', 'max_features': 'sqrt', 'min_samples_split': 5, 'n_estimators': 750}
+    # Time:  1187.8493531020358
+
     gd.fit(x_train, y_train)
     print(gd.best_params_)
     
