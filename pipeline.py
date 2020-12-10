@@ -810,7 +810,7 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     parameters = {
         'kernel':['linear', 'poly', 'rbf', 'sigmoid', 'precomputed'],
         #'gamma': ['scale', 'auto', 0.1, 0.2, 1.0, 10.0],
-        'C': param_range
+        #'C': param_range
     }
 
     svm = SVC(random_state=my_random_state)
