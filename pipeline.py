@@ -755,6 +755,9 @@ def rf_gs_1( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation
     # with n_jobs=5
     # {'criterion': 'gini', 'max_features': 'sqrt', 'min_samples_split': 5, 'n_estimators': 750}
     # Time:  1187.8493531020358
+    # with n_jobs=10
+    # {'criterion': 'gini', 'max_features': 'sqrt', 'min_samples_split': 5, 'n_estimators': 750}
+    # Time:  1272.9734658231027
 
     gd.fit(x_train, y_train)
     print(gd.best_params_)
@@ -887,11 +890,10 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     y = my_outcomes.bad_outcome
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
-    param_range = [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
     parameters = {
         'kernel':['linear', 'poly', 'rbf', 'sigmoid'],
-        #'gamma': ['scale', 'auto', 0.1, 0.2, 1.0, 10.0],
-        #'C': param_range
+        'gamma': ['scale', 'auto', 0.1, 0.2, 1.0, 10.0],
+        'C': [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
     }
 
     # run time with default env and cache_size 1600 - 376 sec
@@ -899,23 +901,23 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     # run time with default env and cache_size 800 -  sec
     # run time with high-mem env and cache_size 800 - 407 sec
     # run time with high-mem env and cache_size 2400 - 446 sec  
-    svm = SVC(kernel='linear', gamma=10, random_state=my_random_state, probability=True, cache_size=1600)
-    #gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5)
-    #gd.fit(x_train, y_train)
-    #print(gd.best_params_)
+    svm = SVC(random_state=my_random_state, probability=True, cache_size=1600)
+    gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5, n_jobs=10)
+    gd.fit(x_train, y_train)
+    print(gd.best_params_)
 
-    svm.fit(x_train, y_train)
+    #svm.fit(x_train, y_train)
 
-    y_pred = svm.predict(x_test)
-    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    print('svm w linear kernel')
-    print(confmat)
+    #y_pred = svm.predict(x_test)
+    #confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    #print('svm w linear kernel')
+    #print(confmat)
 
-    y_pred = svm.predict_proba(x_test)[:, 1]
-    print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
+    #y_pred = svm.predict_proba(x_test)[:, 1]
+    #print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
 
-    svm_disp = plot_roc_curve(svm, x_test, y_test)
-    plt.show()
+    #svm_disp = plot_roc_curve(svm, x_test, y_test)
+    #plt.show()
 
     stop = timeit.default_timer()
     print('Time: ', stop - start)  
