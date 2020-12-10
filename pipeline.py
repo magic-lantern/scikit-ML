@@ -9,7 +9,7 @@ from sklearn.decomposition import PCA, IncrementalPCA
 from sklearn import preprocessing
 from sklearn.preprocessing import StandardScaler
 import sklearn.cluster as cluster
-from sklearn.metrics import adjusted_rand_score, adjusted_mutual_info_score, accuracy_score, confusion_matrix, plot_roc_curve, roc_auc_score, roc_curve, auc
+from sklearn.metrics import confusion_matrix, plot_roc_curve, roc_auc_score, roc_curve, auc, balanced_accuracy_score, precision_score, recall_score
 from sklearn.base import clone
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
@@ -527,6 +527,9 @@ def rf_best_hyp_params( outcomes, data_encoded_and_outcomes, inpatient_encoded_w
     confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
     print('rf w 750 estimators w/gini')
     print(confmat)
+    print('Balanced Accuracy:', balanced_accuracy_score(y_true, y_pred))
+    print('Precision:', precision_score(y_true, y_pred))
+    print('Recall:', recall_score(y_true, y_pred))
     y_pred = rf.predict_proba(x_test)[:, 1]
     print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
 
