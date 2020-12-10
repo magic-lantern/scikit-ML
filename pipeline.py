@@ -813,10 +813,23 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
         #'C': param_range
     }
 
-    svm = SVC(random_state=my_random_state)
-    gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5)
-    gd.fit(x_train, y_train)
-    print(gd.best_params_)
+    svm = SVC(kernel='linear', random_state=my_random_state)
+    #gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5)
+    #gd.fit(x_train, y_train)
+    #print(gd.best_params_)
+
+    svm.fit(x_train, y_train)
+
+    y_pred = svm.predict(x_test)
+    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    print('svm w linear kernel')
+    print(confmat)
+
+    y_pred = svm.predict_proba(x_test)[:, 1]
+    print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
+
+    svm_disp = plot_roc_curve(svm, x_test, y_test)
+    plt.show()
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.e0fd8f16-a131-4276-84c7-acc20e7f1829"),
