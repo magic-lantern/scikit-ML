@@ -510,7 +510,7 @@ def rf_best_feat( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imput
     rf = RandomForestClassifier(n_estimators=750,
                                 min_samples_split=5,
                                 random_state=my_random_state,
-                                max_features='sqrt'
+                                max_features='sqrt',
                                 criterion='gini')
     rf.fit(x_train, y_train)
 
