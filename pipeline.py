@@ -330,6 +330,113 @@ def data_scaled_and_outcomes(inpatient_scaled_w_imputation, outcomes):
     return i.join(o, on=['visit_occurrence_id'], how='inner')
 
 @transform_pandas(
+    Output(rid="ri.foundry.main.dataset.e0fd8f16-a131-4276-84c7-acc20e7f1829"),
+    data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
+    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+)
+def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
+    data_and_outcomes = data_scaled_and_outcomes
+
+    my_data = data_and_outcomes.select(inpatient_scaled_w_imputation.columns).toPandas()
+    my_data = my_data.drop(columns='visit_occurrence_id')
+    my_outcomes = data_and_outcomes.select(outcomes.columns).toPandas()
+    y = my_outcomes.bad_outcome
+    x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
+
+    parameters = {
+        'penalty': ['none', 'l1', 'l2', 'elasticnet'],
+        'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'],
+        'C': [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
+    }
+
+    lr = LogisticRegression(random_state=my_random_state,
+                            max_iter=10000)
+    gd = GridSearchCV(estimator=lr, param_grid=parameters, cv=5, n_jobs=10)
+    gd.fit(x_train, y_train)
+    print(gd.best_params_)
+
+    # lr = LogisticRegression(penalty='none',
+    #                         random_state=my_random_state,
+    #                         max_iter=10000)
+    # lr.fit(x_train, y_train)
+
+    # y_pred = lr.predict(x_test)
+    # confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    # print('lr with no penalty')
+    # print(confmat)
+
+    # lr = LogisticRegression(penalty='l1',
+    #                         solver='saga',
+    #                         C=100.0,
+    #                         random_state=my_random_state,
+    #                         max_iter=10000)
+    # lr.fit(x_train, y_train)
+
+    # y_pred = lr.predict(x_test)
+    # confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    # print('lr with saga solver and l1 penalty')
+    # print(confmat)
+
+    # lr = LogisticRegression(penalty='l2',
+    #                         C=100.0,
+    #                         random_state=my_random_state,
+    #                         max_iter=10000)
+    # lr.fit(x_train, y_train)
+
+    # y_pred = lr.predict(x_test)
+    # confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    # print('lr with l2 penalty')
+    # print(confmat)
+
+    # lr = LogisticRegression(penalty='elasticnet',
+    #                         solver='saga',
+    #                         l1_ratio=0.0,
+    #                         C=100.0,
+    #                         random_state=my_random_state,
+    #                         max_iter=10000)
+    # lr.fit(x_train, y_train)
+
+    # y_pred = lr.predict(x_test)
+    # confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    # print('lr with saga solver and elasticnet penalty l1')
+    # print(confmat)
+
+    # lr = LogisticRegression(penalty='elasticnet',
+    #                         solver='saga',
+    #                         l1_ratio=0.5,
+    #                         C=100.0,
+    #                         random_state=my_random_state,
+    #                         max_iter=10000)
+    # lr.fit(x_train, y_train)
+
+    # y_pred = lr.predict(x_test)
+    # confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    # print('lr with saga solver and elasticnet penalty half l1 and l2')
+    # print(confmat)
+
+    # lr = LogisticRegression(penalty='elasticnet',
+    #                         solver='saga',
+    #                         l1_ratio=1.0,
+    #                         C=100.0,
+    #                         random_state=my_random_state,
+    #                         max_iter=10000)
+    # lr.fit(x_train, y_train)
+
+    # y_pred = lr.predict(x_test)
+    # confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    # print('lr with saga solver and elasticnet penalty l2')
+    # print(confmat)
+
+    # need to get this to work for visualization of results
+    #plot_decision_regions(my_data.values, y.values, classifier=lr)
+    #plt.xlabel('petal length [standardized]')
+    #plt.ylabel('petal width [standardized]')
+    #plt.legend(loc='upper left')
+    #plt.tight_layout()
+    #plt.show()
+
+@transform_pandas(
     Output(rid="ri.foundry.main.dataset.6539e1fc-4c2d-47c1-bc55-96268abaa9ea"),
     data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
     inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
@@ -753,99 +860,4 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
 
     stop = timeit.default_timer()
     print('Time: ', stop - start)  
-
-@transform_pandas(
-    Output(rid="ri.foundry.main.dataset.e0fd8f16-a131-4276-84c7-acc20e7f1829"),
-    data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
-    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
-)
-def various_lr(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
-    data_and_outcomes = data_scaled_and_outcomes
-
-    my_data = data_and_outcomes.select(inpatient_scaled_w_imputation.columns).toPandas()
-    my_data = my_data.drop(columns='visit_occurrence_id')
-    my_outcomes = data_and_outcomes.select(outcomes.columns).toPandas()
-    y = my_outcomes.bad_outcome
-    x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
-
-    lr = LogisticRegression(penalty='none',
-                            random_state=my_random_state,
-                            max_iter=10000)
-    lr.fit(x_train, y_train)
-
-    y_pred = lr.predict(x_test)
-    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    print('lr with no penalty')
-    print(confmat)
-
-    lr = LogisticRegression(penalty='l1',
-                            solver='saga',
-                            C=100.0,
-                            random_state=my_random_state,
-                            max_iter=10000)
-    lr.fit(x_train, y_train)
-
-    y_pred = lr.predict(x_test)
-    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    print('lr with saga solver and l1 penalty')
-    print(confmat)
-
-    lr = LogisticRegression(penalty='l2',
-                            C=100.0,
-                            random_state=my_random_state,
-                            max_iter=10000)
-    lr.fit(x_train, y_train)
-
-    y_pred = lr.predict(x_test)
-    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    print('lr with l2 penalty')
-    print(confmat)
-
-    lr = LogisticRegression(penalty='elasticnet',
-                            solver='saga',
-                            l1_ratio=0.0,
-                            C=100.0,
-                            random_state=my_random_state,
-                            max_iter=10000)
-    lr.fit(x_train, y_train)
-
-    y_pred = lr.predict(x_test)
-    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    print('lr with saga solver and elasticnet penalty l1')
-    print(confmat)
-
-    lr = LogisticRegression(penalty='elasticnet',
-                            solver='saga',
-                            l1_ratio=0.5,
-                            C=100.0,
-                            random_state=my_random_state,
-                            max_iter=10000)
-    lr.fit(x_train, y_train)
-
-    y_pred = lr.predict(x_test)
-    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    print('lr with saga solver and elasticnet penalty half l1 and l2')
-    print(confmat)
-
-    lr = LogisticRegression(penalty='elasticnet',
-                            solver='saga',
-                            l1_ratio=1.0,
-                            C=100.0,
-                            random_state=my_random_state,
-                            max_iter=10000)
-    lr.fit(x_train, y_train)
-
-    y_pred = lr.predict(x_test)
-    confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    print('lr with saga solver and elasticnet penalty l2')
-    print(confmat)
-
-    # need to get this to work for visualization of results
-    #plot_decision_regions(my_data.values, y.values, classifier=lr)
-    #plt.xlabel('petal length [standardized]')
-    #plt.ylabel('petal width [standardized]')
-    #plt.legend(loc='upper left')
-    #plt.tight_layout()
-    #plt.show()
 
