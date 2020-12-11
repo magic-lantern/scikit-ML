@@ -352,7 +352,12 @@ def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 
     lr = LogisticRegression(random_state=my_random_state,
                             max_iter=10000)
-    gd = GridSearchCV(estimator=lr, param_grid=parameters, cv=5, n_jobs=10)
+    gd = GridSearchCV(estimator=lr,
+                      param_grid=parameters,
+                      cv=5,
+                      n_jobs=10,
+                      scoring='balanced_accuracy',
+                      verbose=2)
     gd.fit(x_train, y_train)
     print(gd.best_params_)
 
