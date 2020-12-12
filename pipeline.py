@@ -967,3 +967,51 @@ def svm_gs_3(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     stop = timeit.default_timer()
     print('Time: ', stop - start)  
 
+@transform_pandas(
+    Output(rid="ri.vector.main.execute.b1e46b05-398a-4251-af44-0b61ec827799"),
+    data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
+    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+)
+def svm_gs_2(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
+    start = timeit.default_timer()
+
+    data_and_outcomes = data_scaled_and_outcomes
+    my_data = data_and_outcomes.select(inpatient_scaled_w_imputation.columns).toPandas()
+    my_data = my_data.drop(columns='visit_occurrence_id')
+    my_outcomes = data_and_outcomes.select(outcomes.columns).toPandas()
+    y = my_outcomes.bad_outcome
+    x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
+
+    parameters = {
+        'kernel':['linear', 'poly', 'rbf', 'sigmoid'],
+        'gamma': ['scale', 'auto', 0.1, 0.2, 1.0, 10.0],
+        'C': [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
+    }
+
+    # run time with default env and cache_size 1600 - 376 sec
+    # run time with high-mem env and cache_size 1600 - 382  sec
+    # run time with default env and cache_size 800 -  sec
+    # run time with high-mem env and cache_size 800 - 407 sec
+    # run time with high-mem env and cache_size 2400 - 446 sec  
+    svm = SVC(random_state=my_random_state, probability=True, cache_size=1600)
+    gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5, n_jobs=10)
+    gd.fit(x_train, y_train)
+    print(gd.best_params_)
+
+    #svm.fit(x_train, y_train)
+
+    #y_pred = svm.predict(x_test)
+    #confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
+    #print('svm w linear kernel')
+    #print(confmat)
+
+    #y_pred = svm.predict_proba(x_test)[:, 1]
+    #print('ROC_AUC_SCORE: ', roc_auc_score(y_true=y_test, y_score=y_pred))
+
+    #svm_disp = plot_roc_curve(svm, x_test, y_test)
+    #plt.show()
+
+    stop = timeit.default_timer()
+    print('Time: ', stop - start)  
+
