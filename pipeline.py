@@ -345,9 +345,9 @@ def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
     parameters = {
-        'penalty': ['l2'],#['none', 'l1', 'l2', 'elasticnet'],
+        'penalty': ['l1'],#['none', 'l1', 'l2', 'elasticnet'],
         'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'],
-        'C': [0.001, 0.01, 0.1, 0.5, 1.0, 2.0, 10.0, 100.0]
+        'C': [0.01, 0.1, 0.25, 0.5, 0.75, 1.0, 2.0, 10.0]
     }
 
     lr = LogisticRegression(random_state=my_random_state,
@@ -355,7 +355,7 @@ def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     gd = GridSearchCV(estimator=lr,
                       param_grid=parameters,
                       cv=5,
-                      n_jobs=-1,
+                      n_jobs=8,
                       verbose=3)
     gd.fit(x_train, y_train)
     print(gd.best_params_)
@@ -781,7 +781,7 @@ def ridge_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     gd = GridSearchCV(estimator=rc,
                       param_grid=parameters,
                       cv=5,
-                      n_jobs=-1,
+                      n_jobs=8,
                       verbose=3)
     gd.fit(x_train, y_train)
     print(gd.best_params_)
