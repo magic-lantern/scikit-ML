@@ -974,31 +974,31 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
 def svm_linear_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     start = timeit.default_timer()
 
-    data_and_outcomes = data_scaled_and_outcomes
-    my_data = data_and_outcomes.select(inpatient_scaled_w_imputation.columns).toPandas()
-    my_data = my_data.drop(columns='visit_occurrence_id')
-    my_outcomes = data_and_outcomes.select(outcomes.columns).toPandas()
-    y = my_outcomes.bad_outcome
-    x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
+data_and_outcomes = data_scaled_and_outcomes
+my_data = data_and_outcomes.select(inpatient_scaled_w_imputation.columns).toPandas()
+my_data = my_data.drop(columns='visit_occurrence_id')
+my_outcomes = data_and_outcomes.select(outcomes.columns).toPandas()
+y = my_outcomes.bad_outcome
+x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
-    parameters = {
-        'kernel':['linear'],
-        'gamma': ['scale', 'auto'],
-        'C': [0.5, 1.0, 2.5, 5.0]
-    }
-    
-    # best {'C': 1.0, 'gamma': 'scale', 'kernel': 'linear'}
-    # with params
-    #   'gamma': ['scale', 'auto', 0.1, 0.2, 1.0, 10.0],
-    #   'C': [0.1, 1.0, 10.0]
+parameters = {
+    'kernel':['linear'],
+    'gamma': ['scale', 'auto'],
+    'C': [0.5, 1.0, 2.5, 5.0]
+}
 
-    svm = SVC(random_state=my_random_state,
-              probability=True,
-              cache_size=1600,
-              maxiter=1000)
-    gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5, n_jobs=8, verbose=2)
-    gd.fit(x_train, y_train)
-    print(gd.best_params_)
+# best {'C': 1.0, 'gamma': 'scale', 'kernel': 'linear'}
+# with params
+#   'gamma': ['scale', 'auto', 0.1, 0.2, 1.0, 10.0],
+#   'C': [0.1, 1.0, 10.0]
+
+svm = SVC(random_state=my_random_state,
+            probability=True,
+            cache_size=1600,
+            max_iter=1000)
+gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5, n_jobs=8, verbose=2)
+gd.fit(x_train, y_train)
+print(gd.best_params_)
 
     #svm.fit(x_train, y_train)
 
