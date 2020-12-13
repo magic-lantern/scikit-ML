@@ -390,7 +390,7 @@ def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
                       cv=5,
                       n_jobs=-1,
                       verbose=3,
-                      scoring='roc_auc',
+                      scoring='roc_auc')
                       #scoring='balanced_accuracy')
     gd.fit(x_train, y_train)
     print(gd.best_params_)
