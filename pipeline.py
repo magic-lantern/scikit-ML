@@ -345,7 +345,7 @@ def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
     parameters = {
-        'penalty': ['none', 'l1', 'l2', 'elasticnet'],
+        'penalty': ['none'],#, 'l1', 'l2', 'elasticnet'],
         'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'],
         'C': [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
     }
@@ -356,7 +356,7 @@ def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
                       param_grid=parameters,
                       cv=5,
                       n_jobs=10,
-                      verbose=2)
+                      verbose=3)
     gd.fit(x_train, y_train)
     print(gd.best_params_)
 
