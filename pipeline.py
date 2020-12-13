@@ -1101,7 +1101,7 @@ def svm_sigmoid_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputa
     svm = SVC(random_state=my_random_state,
               probability=True,
               cache_size=1600,
-              max_iter=1000)
+              max_iter=10000)
     gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5, n_jobs=8, verbose=True)
     gd.fit(x_train, y_train)
     print(gd.best_params_)
