@@ -330,6 +330,21 @@ def data_scaled_and_outcomes(inpatient_scaled_w_imputation, outcomes):
     return i.join(o, on=['visit_occurrence_id'], how='inner')
 
 @transform_pandas(
+    Output(rid="ri.foundry.main.dataset.bab694df-4318-4c0e-aa36-b0f4296c6360"),
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
+    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+)
+def jun_to_oct_scaled_and_outcomes(inpatient_scaled_w_imputation, outcomes):
+    i = inpatient_scaled_w_imputation
+    o = outcomes
+    df = i.join(o, on=['visit_occurrence_id'], how='inner')
+    df = df.filter((df.visit_start_date >= '2020-06-01') &
+              (df.visit_start_date < '2020-11-01') & 
+              (df.visit_end_date >= '2020-06-01') &
+              (df.visit_end_date < '2020-11-01'))
+    return df
+
+@transform_pandas(
     Output(rid="ri.foundry.main.dataset.e0fd8f16-a131-4276-84c7-acc20e7f1829"),
     data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
     inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
@@ -1061,19 +1076,4 @@ def svm_sigmoid_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputa
 
     stop = timeit.default_timer()
     print('Time: ', stop - start)  
-
-@transform_pandas(
-    Output(rid="ri.vector.main.execute.6f432130-12a4-4889-af6f-deb51ec9d8c3"),
-    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
-)
-def mar_to_may_scaled_and_outcomes_1(inpatient_scaled_w_imputation, outcomes):
-    i = inpatient_scaled_w_imputation
-    o = outcomes
-    df = i.join(o, on=['visit_occurrence_id'], how='inner')
-    df = df.filter((df.visit_start_date >= '2020-03-01') &
-              (df.visit_start_date < '2020-06-01') & 
-              (df.visit_end_date >= '2020-03-01') &
-              (df.visit_end_date < '2020-06-01'))
-    return df
 
