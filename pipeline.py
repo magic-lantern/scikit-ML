@@ -347,7 +347,7 @@ def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     parameters = {
         'penalty': ['l1'],#['none', 'l1', 'l2', 'elasticnet'],
         'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'],
-        'C': [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
+        'C': [0.0001, 0.001, 0.01, 0.1, 0.5, 1.0, 2.0, 10.0, 100.0, 1000.0]
     }
 
     lr = LogisticRegression(random_state=my_random_state,
@@ -772,13 +772,12 @@ def ridge_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
     parameters = {
-        'penalty': ['none'],#, 'l1', 'l2', 'elasticnet'],
-        'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'],
+        'solver': ['svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga'],
         'alpha': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
-        'C': [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
     }
 
-    rc = RidgeClassifier(random_state=my_random_state)
+    rc = RidgeClassifier(random_state=my_random_state,
+                         class_weight='balanced')
     gd = GridSearchCV(estimator=rc,
                       param_grid=parameters,
                       cv=5,
