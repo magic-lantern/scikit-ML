@@ -523,6 +523,21 @@ def lr_rfecv(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     return pd.DataFrame(data=pipeline._final_estimator.coef_, columns=x_test.loc[:, rfecv.support_].columns)
 
 @transform_pandas(
+    Output(rid="ri.foundry.main.dataset.c0fd81e6-dc02-45b9-93fe-b0047394e4f8"),
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
+    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+)
+def mar_to_may_scaled_and_outcomes(inpatient_scaled_w_imputation, outcomes):
+    i = inpatient_scaled_w_imputation
+    o = outcomes
+    df = i.join(o, on=['visit_occurrence_id'], how='inner')
+    df = df.filter((df.visit_start_date >= '2020-03-01') &
+              (df.visit_start_date < '2020-06-01') & 
+              (df.visit_end_date >= '2020-03-01') &
+              (df.visit_end_date < '2020-06-01'))
+    return df
+
+@transform_pandas(
     Output(rid="ri.foundry.main.dataset.58c8d23e-5558-4347-98c6-e2dc0c7a6ef7"),
     outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c"),
     pca_rfecv_cols_umap_embedding=Input(rid="ri.foundry.main.dataset.438c95e7-3842-40a2-a718-4e9826193dd4")
@@ -1046,14 +1061,4 @@ def svm_sigmoid_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputa
 
     stop = timeit.default_timer()
     print('Time: ', stop - start)  
-
-@transform_pandas(
-    Output(rid="ri.vector.main.execute.504b52f9-b065-484f-b14a-4f5786d59db7"),
-    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.f410db35-59e0-4b82-8fa8-d6dc6a61c9f2"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
-)
-def data_scaled_and_outcomes_1(inpatient_scaled_w_imputation, outcomes):
-    i = inpatient_scaled_w_imputation
-    o = outcomes
-    return i.join(o, on=['visit_occurrence_id'], how='inner')
 
