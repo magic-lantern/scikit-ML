@@ -935,8 +935,8 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
 
     parameters = {
         'kernel':['linear', 'poly', 'rbf', 'sigmoid'],
-        'gamma': ['scale', 'auto', 0.1, 0.2, 1.0, 10.0],
-        'C': [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
+        'gamma': ['scale', 'auto', 0.1, 0.2, 1.0],
+        'C': [0.01, 0.1, 1.0, 2.0, 10.0]
     }
 
     # run time with default env and cache_size 1600 - 376 sec
@@ -945,7 +945,11 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     # run time with high-mem env and cache_size 800 - 407 sec
     # run time with high-mem env and cache_size 2400 - 446 sec  
     svm = SVC(random_state=my_random_state, probability=True, cache_size=1600)
-    gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5, n_jobs=10)
+    gd = GridSearchCV(estimator=svm,
+                      param_grid=parameters,
+                      cv=5,
+                      n_jobs=-1,
+                      max_iter=2500)
     gd.fit(x_train, y_train)
     print(gd.best_params_)
 
