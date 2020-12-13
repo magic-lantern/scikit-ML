@@ -345,7 +345,7 @@ def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
     parameters = {
-        'penalty': ['l1'],#['none', 'l1', 'l2', 'elasticnet'],
+        'penalty': ['l2'],#['none', 'l1', 'l2', 'elasticnet'],
         'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'],
         'C': [0.01, 0.1, 0.25, 0.5, 0.75, 1.0, 2.0, 10.0]
     }
