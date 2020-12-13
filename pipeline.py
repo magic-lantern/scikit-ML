@@ -378,7 +378,7 @@ def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
         'penalty': ['l1'],#['none', 'l1', 'l2', 'elasticnet'],
         'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'],
         #'solver': ['saga'],
-        'l1_ratio': [0.2, 0.3, 0.4, 0.45, 0.5, 0.55, 0.6, 0.7, 0.8, 0.9]
+        'l1_ratio': [0.2, 0.3, 0.4, 0.45, 0.5, 0.55, 0.6, 0.7, 0.8, 0.9],
         'C': [0.01, 0.1, 0.25, 0.5, 0.75, 1.0, 2.0, 10.0]
     }
 
@@ -1030,15 +1030,22 @@ def svm_rbf_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation
     parameters = {
         'kernel':['rbf'],
         'gamma': ['scale', 'auto', 0.1, 0.2, 1.0, 10.0],
-        'C': [0.1, 1.0, 10.0]
+        'C': [0.5, 1.0, 2.5, 5.0],
     }
+    # best {'C': 1.0, 'gamma': 'scale', 'kernel': 'rbf'}
+    # from these params
+    #   'gamma': ['scale', 'auto', 0.1, 0.2, 1.0, 10.0],
+    #    'C': [0.1, 1.0, 10.0]
 
     # run time with default env and cache_size 1600 - 376 sec
     # run time with high-mem env and cache_size 1600 - 382  sec
     # run time with default env and cache_size 800 -  sec
     # run time with high-mem env and cache_size 800 - 407 sec
     # run time with high-mem env and cache_size 2400 - 446 sec  
-    svm = SVC(random_state=my_random_state, probability=True, cache_size=1600)
+    svm = SVC(random_state=my_random_state,
+              probability=True,
+              cache_size=1600,
+              max_iter=1000)
     gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5, n_jobs=8, verbose=2)
     gd.fit(x_train, y_train)
     print(gd.best_params_)
