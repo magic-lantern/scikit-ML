@@ -781,7 +781,7 @@ def ridge_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     gd = GridSearchCV(estimator=rc,
                       param_grid=parameters,
                       cv=5,
-                      n_jobs=4,
+                      n_jobs=-1,
                       verbose=3)
     gd.fit(x_train, y_train)
     print(gd.best_params_)
