@@ -772,8 +772,8 @@ def ridge_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
     parameters = {
-        'solver': ['auto'], #['svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga'],
-        'alpha': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+        'solver': ['svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga'],
+        'alpha': [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
     }
 
     rc = RidgeClassifier(random_state=my_random_state,
