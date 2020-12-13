@@ -772,7 +772,7 @@ def ridge_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
     parameters = {
-        'solver': ['svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga'],
+        'solver': ['auto'], #['svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga'],
         'alpha': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
     }
 
@@ -781,90 +781,10 @@ def ridge_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     gd = GridSearchCV(estimator=rc,
                       param_grid=parameters,
                       cv=5,
-                      n_jobs=-1,
+                      n_jobs=4,
                       verbose=3)
     gd.fit(x_train, y_train)
     print(gd.best_params_)
-
-    # lr = LogisticRegression(penalty='none',
-    #                         random_state=my_random_state,
-    #                         max_iter=10000)
-    # lr.fit(x_train, y_train)
-
-    # y_pred = lr.predict(x_test)
-    # confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    # print('lr with no penalty')
-    # print(confmat)
-
-    # lr = LogisticRegression(penalty='l1',
-    #                         solver='saga',
-    #                         C=100.0,
-    #                         random_state=my_random_state,
-    #                         max_iter=10000)
-    # lr.fit(x_train, y_train)
-
-    # y_pred = lr.predict(x_test)
-    # confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    # print('lr with saga solver and l1 penalty')
-    # print(confmat)
-
-    # lr = LogisticRegression(penalty='l2',
-    #                         C=100.0,
-    #                         random_state=my_random_state,
-    #                         max_iter=10000)
-    # lr.fit(x_train, y_train)
-
-    # y_pred = lr.predict(x_test)
-    # confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    # print('lr with l2 penalty')
-    # print(confmat)
-
-    # lr = LogisticRegression(penalty='elasticnet',
-    #                         solver='saga',
-    #                         l1_ratio=0.0,
-    #                         C=100.0,
-    #                         random_state=my_random_state,
-    #                         max_iter=10000)
-    # lr.fit(x_train, y_train)
-
-    # y_pred = lr.predict(x_test)
-    # confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    # print('lr with saga solver and elasticnet penalty l1')
-    # print(confmat)
-
-    # lr = LogisticRegression(penalty='elasticnet',
-    #                         solver='saga',
-    #                         l1_ratio=0.5,
-    #                         C=100.0,
-    #                         random_state=my_random_state,
-    #                         max_iter=10000)
-    # lr.fit(x_train, y_train)
-
-    # y_pred = lr.predict(x_test)
-    # confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    # print('lr with saga solver and elasticnet penalty half l1 and l2')
-    # print(confmat)
-
-    # lr = LogisticRegression(penalty='elasticnet',
-    #                         solver='saga',
-    #                         l1_ratio=1.0,
-    #                         C=100.0,
-    #                         random_state=my_random_state,
-    #                         max_iter=10000)
-    # lr.fit(x_train, y_train)
-
-    # y_pred = lr.predict(x_test)
-    # confmat = confusion_matrix(y_true=y_test, y_pred=y_pred)
-    # print('lr with saga solver and elasticnet penalty l2')
-    # print(confmat)
-
-    # need to get this to work for visualization of results
-    #plot_decision_regions(my_data.values, y.values, classifier=lr)
-    #plt.xlabel('petal length [standardized]')
-    #plt.ylabel('petal width [standardized]')
-    #plt.legend(loc='upper left')
-    #plt.tight_layout()
-    #plt.show()
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.ca533b97-fde4-4d3f-a987-b2372e7f2894"),
