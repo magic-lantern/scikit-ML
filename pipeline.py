@@ -375,12 +375,12 @@ def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
     parameters = {
-        'penalty': ['l2'],#['none', 'l1', 'l2', 'elasticnet'],
-        'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'],
-        #'solver': ['saga'],
-        #'l1_ratio': [0.2, 0.3, 0.4, 0.45, 0.5, 0.55, 0.6, 0.7, 0.8, 0.9],
-        #'C': [0.1, 0.15, 0.25, 0.35, 0.45, 0.5, 0.65, 0.75, 0.90, 1.0, 1.1, 1.25]
-        'C': np.arange(0.01, 1.25, 0.01)
+        'penalty': ['elasticnet'],#['none', 'l1', 'l2', 'elasticnet'],
+        #'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'],
+        'solver': ['saga'],
+        'l1_ratio': [0.2, 0.3, 0.4, 0.45, 0.5, 0.55, 0.6, 0.7, 0.8, 0.9],
+        'C': [0.1, 0.15, 0.25, 0.35, 0.45, 0.5, 0.65, 0.75, 0.90, 1.0, 1.1, 1.25]
+        #'C': np.arange(0.01, 1.25, 0.01)
     }
 
     lr = LogisticRegression(random_state=my_random_state,
