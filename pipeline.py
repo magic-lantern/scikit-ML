@@ -379,7 +379,8 @@ def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
         'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'],
         #'solver': ['saga'],
         #'l1_ratio': [0.2, 0.3, 0.4, 0.45, 0.5, 0.55, 0.6, 0.7, 0.8, 0.9],
-        'C': [0.1, 0.15, 0.25, 0.35, 0.45, 0.5, 0.65, 0.75, 0.90, 1.0, 1.1, 1.25]
+        #'C': [0.1, 0.15, 0.25, 0.35, 0.45, 0.5, 0.65, 0.75, 0.90, 1.0, 1.1, 1.25]
+        'C': np.arange(0.01, 1.25, 0.01)
     }
 
     lr = LogisticRegression(random_state=my_random_state,
@@ -389,7 +390,8 @@ def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
                       cv=5,
                       n_jobs=-1,
                       verbose=3,
-                      scoring='roc_auc')
+                      scoring='roc_auc',
+                      #scoring='balanced_accuracy')
     gd.fit(x_train, y_train)
     print(gd.best_params_)
 
