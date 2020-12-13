@@ -921,7 +921,7 @@ def svm_linear_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputat
     parameters = {
         'kernel':['linear'],
         'gamma': ['scale', 'auto', 0.1, 0.2, 1.0, 10.0],
-        'C': [0.01, 0.1, 1.0, 10.0, 100.0]
+        'C': [0.1, 1.0, 10.0]
     }
     
 
@@ -970,7 +970,7 @@ def svm_rbf_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation
     parameters = {
         'kernel':['rbf'],
         'gamma': ['scale', 'auto', 0.1, 0.2, 1.0, 10.0],
-        'C': [0.01, 0.1, 1.0, 10.0, 100.0]
+        'C': [0.1, 1.0, 10.0]
     }
 
     # run time with default env and cache_size 1600 - 376 sec
@@ -1018,7 +1018,7 @@ def svm_sigmoid_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputa
     parameters = {
         'kernel':['sigmoid'],
         'gamma': ['scale', 'auto', 0.1, 0.2, 1.0, 10.0],
-        'C': [0.01, 0.1, 1.0, 10.0, 100.0]
+        'C': [0.1, 1.0, 10.0]
     }
 
     # run time with default env and cache_size 1600 - 376 sec
