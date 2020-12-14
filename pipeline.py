@@ -990,8 +990,9 @@ def svm_linear_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputat
 
     parameters = {
         'kernel':['linear'],
-        'gamma': ['scale', 'auto'],
-        'C': [0.5, 1.0, 2.5, 5.0]
+        'gamma': ['scale', 'auto', 0.1, 0.2, 1.0],
+        'C': [0.1, 0.5, 1.0, 1.4, 2.0, 5.0, 10.0]
+        #'C': np.arange(0.5, 1.6, 0.025)
     }
 
     # best {'C': 1.0, 'gamma': 'scale', 'kernel': 'linear'}
@@ -1002,7 +1003,7 @@ def svm_linear_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputat
     svm = SVC(random_state=my_random_state,
                 probability=True,
                 cache_size=1600,
-                max_iter=1000)
+                max_iter=2500)
     gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5, n_jobs=8, verbose=2)
     gd.fit(x_train, y_train)
     print(gd.best_params_)
