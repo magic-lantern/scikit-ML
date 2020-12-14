@@ -1004,9 +1004,9 @@ def svm_linear_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputat
                 probability=True,
                 cache_size=1600,
                 max_iter=2500)
-    gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5, n_jobs=8, verbose=2)
-    gd.fit(x_train, y_train)
-    print(gd.best_params_)
+    gd = GridSearchCV(estimator=svm, param_grid=parameters, cv=5, n_jobs=-1, verbose=2)
+gd.fit(x_train, y_train)
+print(gd.best_params_)
 
     #svm.fit(x_train, y_train)
 
