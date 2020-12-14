@@ -936,7 +936,8 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     parameters = {
         'kernel':['linear', 'poly', 'rbf', 'sigmoid'],
         'gamma': ['scale', 'auto', 0.1, 0.2, 1.0],
-        'C': [0.01, 0.1, 1.0, 2.0, 10.0]
+        #'C': [0.01, 0.1, 1.0, 2.0, 10.0]
+        'C': np.arange(0.5, 1.6, 0.025)
     }
 
     # run time with default env and cache_size 1600 - 376 sec
@@ -947,7 +948,7 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     svm = SVC(random_state=my_random_state,
               probability=True,
               cache_size=1600,
-              max_iter=2500)
+              max_iter=3000)
     gd = GridSearchCV(estimator=svm,
                       param_grid=parameters,
                       cv=5,
