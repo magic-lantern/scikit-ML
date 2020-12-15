@@ -936,28 +936,26 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
     columns = inpatient_scaled_w_imputation.drop('visit_occurrence_id').columns
-    my_data = data_scaled_and_outcomes.withColumn("features", F.array(columns)).select("bad_outcome", "features")
+    # this doesn't work
+    # my_data = data_scaled_and_outcomes.withColumn("features", F.array(columns)).select("bad_outcome", "features")
+    my_data = data_scaled_and_outcomes.select(col("bad_outcome").alias('prediction'), F.struct(columns).alias('features'))
     train, test = my_data.randomSplit([0.7, 0.3], seed=my_random_state)
 
-    #Assuming dfOld already contains state and fld as asked in question.
-    #dfOld.withColumn("a","value")
-    dfNew = data_scaled_and_outcomes.select(col("bad_outcome").alias('prediction'), F.struct(columns).alias('features'))
-
     ## LinearSVC(featuresCol='features', labelCol='label', predictionCol='prediction', maxIter=100, regParam=0.0, tol=1e-06, rawPredictionCol='rawPrediction', fitIntercept=True, standardization=True, threshold=0.0, weightCol=None, aggregationDepth=2)
-    #lsvc = LinearSVC()
+    lsvc = LinearSVC()
 #
     ## Fit the model
-    #lsvcModel = lsvc.fit(train)
+    lsvcModel = lsvc.fit(train)
 #
     ## Print the coefficients and intercept for linear SVC
-    #print("Coefficients: " + str(lsvcModel.coefficients))
-    #print("Intercept: " + str(lsvcModel.intercept))
+    print("Coefficients: " + str(lsvcModel.coefficients))
+    print("Intercept: " + str(lsvcModel.intercept))
 #
 #
-    #stop = timeit.default_timer()
-    #print('Time: ', stop - start)
+    stop = timeit.default_timer()
+    print('Time: ', stop - start)
 
-    return dfNew
+    return my_data
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.52b16a88-58d1-4d51-a8d8-114b020b870e"),
