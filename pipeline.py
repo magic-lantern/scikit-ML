@@ -380,7 +380,7 @@ def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
         #'solver': ['saga'],
         #'l1_ratio': [0.2, 0.3, 0.4, 0.45, 0.5, 0.55, 0.6, 0.7, 0.8, 0.9],
         #'C': [0.1, 0.15, 0.25, 0.35, 0.45, 0.5, 0.65, 0.75, 0.90, 1.0, 1.1, 1.25]
-        'C': np.arange(0.01, 1.25, 0.01)
+        'C': np.arange(0.001, 0.2, 0.0025)
     }
 
     lr = LogisticRegression(random_state=my_random_state,
@@ -933,6 +933,21 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
     y = my_outcomes.bad_outcome
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
+    from pyspark.ml.classification import LinearSVC
+
+    # Load training data
+    training = spark.read.format("libsvm").load("data/mllib/sample_libsvm_data.txt")
+    
+    # LinearSVC(featuresCol='features', labelCol='label', predictionCol='prediction', maxIter=100, regParam=0.0, tol=1e-06, rawPredictionCol='rawPrediction', fitIntercept=True, standardization=True, threshold=0.0, weightCol=None, aggregationDepth=2)
+    lsvc = LinearSVC()
+
+    # Fit the model
+    lsvcModel = lsvc.fit(training)
+
+    # Print the coefficients and intercept for linear SVC
+    print("Coefficients: " + str(lsvcModel.coefficients))
+    print("Intercept: " + str(lsvcModel.intercept))
+
     parameters = {
         'kernel':['linear', 'poly', 'rbf', 'sigmoid'],
         'gamma': ['scale', 'auto', 0.1, 0.2, 1.0],
@@ -940,11 +955,6 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
         'C': np.arange(0.5, 1.6, 0.025)
     }
 
-    # run time with default env and cache_size 1600 - 376 sec
-    # run time with high-mem env and cache_size 1600 - 382  sec
-    # run time with default env and cache_size 800 -  sec
-    # run time with high-mem env and cache_size 800 - 407 sec
-    # run time with high-mem env and cache_size 2400 - 446 sec  
     svm = SVC(random_state=my_random_state,
               probability=True,
               cache_size=1600,
