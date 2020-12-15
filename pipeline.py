@@ -939,19 +939,6 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
     my_data = data_scaled_and_outcomes.withColumn("features", F.array(columns)).select("bad_outcome", "features")
     train, test = my_data.randomSplit([0.7, 0.3], seed=my_random_state)
     
-    # LinearSVC(featuresCol='features', labelCol='label', predictionCol='prediction', maxIter=100, regParam=0.0, tol=1e-06, rawPredictionCol='rawPrediction', fitIntercept=True, standardization=True, threshold=0.0, weightCol=None, aggregationDepth=2)
-    lsvc = LinearSVC()
-
-    # Fit the model
-    lsvcModel = lsvc.fit(train)
-
-    # Print the coefficients and intercept for linear SVC
-    print("Coefficients: " + str(lsvcModel.coefficients))
-    print("Intercept: " + str(lsvcModel.intercept))
-
-    stop = timeit.default_timer()
-    print('Time: ', stop - start)
-    
     return my_data
 
 @transform_pandas(
