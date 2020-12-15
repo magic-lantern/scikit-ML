@@ -22,6 +22,8 @@ from itertools import combinations
 
 from pyspark.ml.classification import LinearSVC
 from pyspark.ml.feature import StringIndexer, VectorAssembler
+from pyspark.mllib.evaluation import BinaryClassificationMetrics
+from pyspark.mllib.util import MLUtils
 from pyspark.sql import functions as F
 from pyspark.sql.functions import max, mean, min, stddev, lit, regexp_replace, col
 
@@ -932,13 +934,6 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
 
     start = timeit.default_timer()
 
-    data_and_outcomes = data_scaled_and_outcomes
-    my_data = data_and_outcomes.select(inpatient_scaled_w_imputation.columns).toPandas()
-    my_data = my_data.drop(columns='visit_occurrence_id')
-    my_outcomes = data_and_outcomes.select(outcomes.columns).toPandas()
-    y = my_outcomes.bad_outcome
-    x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
-
     columns = inpatient_scaled_w_imputation.drop('visit_occurrence_id').columns
     # this doesn't work
     # my_data = data_scaled_and_outcomes.withColumn("features", F.array(columns)).select("bad_outcome", "features")
@@ -946,6 +941,7 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
     # my_data = data_scaled_and_outcomes.select(col("bad_outcome").alias('prediction'), F.struct(columns).alias('features'))
     my_data = data_scaled_and_outcomes
     my_data = my_data.withColumn('label', F.when(my_data.bad_outcome == True, 1).otherwise(0))
+    # doesn't seem to have built in stratification by outcome variable
     train, test = my_data.randomSplit([0.7, 0.3], seed=my_random_state)
 
     assembler = VectorAssembler(
@@ -953,19 +949,30 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
         outputCol='features'
     )
     train = assembler.transform(train)
-    train = assembler.transform(test)
+    test = assembler.transform(test)
 
     ## LinearSVC(featuresCol='features', labelCol='label', predictionCol='prediction', maxIter=100, regParam=0.0, tol=1e-06, rawPredictionCol='rawPrediction', fitIntercept=True, standardization=True, threshold=0.0, weightCol=None, aggregationDepth=2)
     lsvc = LinearSVC(featuresCol='features', labelCol='label')
-#
+
     ## Fit the model
-    lsvcModel = lsvc.fit(train)
-#
+    model = lsvc.fit(train)
+
     ## Print the coefficients and intercept for linear SVC
     print("Coefficients: " + str(lsvcModel.coefficients))
     print("Intercept: " + str(lsvcModel.intercept))
-#
-#
+    
+    # Compute raw scores on the test set
+    predictionAndLabels = test.map(lambda lp: (float(model.predict(lp.features)), lp.label))
+
+    # Instantiate metrics object
+    metrics = BinaryClassificationMetrics(predictionAndLabels)
+
+    # Area under precision-recall curve
+    print("Area under PR = %s" % metrics.areaUnderPR)
+
+    # Area under ROC curve
+    print("Area under ROC = %s" % metrics.areaUnderROC)
+
     stop = timeit.default_timer()
     print('Time: ', stop - start)
 
