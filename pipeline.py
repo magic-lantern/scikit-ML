@@ -19,6 +19,8 @@ from sklearn.feature_selection import RFE, RFECV
 from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
 from itertools import combinations
+
+from pyspark.ml.classification import LinearSVC
 from pyspark.sql import functions as F
 from pyspark.sql.functions import max, mean, min, stddev, lit, regexp_replace, col
 
@@ -933,41 +935,10 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
     y = my_outcomes.bad_outcome
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
-    from pyspark.ml.classification import LinearSVC
+    columns = inpatient_scaled_w_imputation.columns
 
-    # Load training data
-    training = spark.read.format("libsvm").load("data/mllib/sample_libsvm_data.txt")
-    
-    # LinearSVC(featuresCol='features', labelCol='label', predictionCol='prediction', maxIter=100, regParam=0.0, tol=1e-06, rawPredictionCol='rawPrediction', fitIntercept=True, standardization=True, threshold=0.0, weightCol=None, aggregationDepth=2)
-    lsvc = LinearSVC()
-
-    # Fit the model
-    lsvcModel = lsvc.fit(training)
-
-    # Print the coefficients and intercept for linear SVC
-    print("Coefficients: " + str(lsvcModel.coefficients))
-    print("Intercept: " + str(lsvcModel.intercept))
-
-    parameters = {
-        'kernel':['linear', 'poly', 'rbf', 'sigmoid'],
-        'gamma': ['scale', 'auto', 0.1, 0.2, 1.0],
-        #'C': [0.01, 0.1, 1.0, 2.0, 10.0]
-        'C': np.arange(0.5, 1.6, 0.025)
-    }
-
-    svm = SVC(random_state=my_random_state,
-              probability=True,
-              cache_size=1600,
-              max_iter=3000)
-    gd = GridSearchCV(estimator=svm,
-                      param_grid=parameters,
-                      cv=5,
-                      n_jobs=-1)
-    gd.fit(x_train, y_train)
-    print(gd.best_params_)
-
-    stop = timeit.default_timer()
-    print('Time: ', stop - start)  
+    my_data = data_scaled_and_outcomes.withColumn("features", F.array(columns)).select("bad_outcome", "features")
+    return my_data
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.2fceafbf-2355-4cfc-b70b-843b185f2a58"),
