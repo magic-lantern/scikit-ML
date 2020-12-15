@@ -927,6 +927,9 @@ def sbs_knn(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
 )
 def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
+    # getting data in right format is very tricky. some helpful links
+    # https://towardsdatascience.com/machine-learning-at-scale-with-apache-spark-mllib-python-example-b32a9c74c610
+
     start = timeit.default_timer()
 
     data_and_outcomes = data_scaled_and_outcomes
@@ -959,8 +962,8 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
     lsvcModel = lsvc.fit(train)
 #
     ## Print the coefficients and intercept for linear SVC
-    #print("Coefficients: " + str(lsvcModel.coefficients))
-    #print("Intercept: " + str(lsvcModel.intercept))
+    print("Coefficients: " + str(lsvcModel.coefficients))
+    print("Intercept: " + str(lsvcModel.intercept))
 #
 #
     stop = timeit.default_timer()
