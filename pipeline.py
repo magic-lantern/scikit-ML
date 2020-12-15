@@ -941,7 +941,7 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
 
     #Assuming dfOld already contains state and fld as asked in question.
     #dfOld.withColumn("a","value")
-    dfNew = data_scaled_and_outcomes.select("hiv", "chf", F.struct(col("age_at_visit_start_in_years_int"), col("q_score")))
+    dfNew = data_scaled_and_outcomes.select("hiv", "chf", F.struct(col("age_at_visit_start_in_years_int"), col("q_score")).alias('features'))
 
     ## LinearSVC(featuresCol='features', labelCol='label', predictionCol='prediction', maxIter=100, regParam=0.0, tol=1e-06, rawPredictionCol='rawPrediction', fitIntercept=True, standardization=True, threshold=0.0, weightCol=None, aggregationDepth=2)
     #lsvc = LinearSVC()
