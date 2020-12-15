@@ -958,8 +958,8 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
     model = lsvc.fit(train)
 
     ## Print the coefficients and intercept for linear SVC
-    print("Coefficients: " + str(lsvcModel.coefficients))
-    print("Intercept: " + str(lsvcModel.intercept))
+    print("Coefficients: " + str(model.coefficients))
+    print("Intercept: " + str(model.intercept))
     
     # Compute raw scores on the test set
     predictionAndLabels = test.map(lambda lp: (float(model.predict(lp.features)), lp.label))
