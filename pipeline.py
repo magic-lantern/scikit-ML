@@ -21,6 +21,7 @@ from sklearn.svm import SVC
 from itertools import combinations
 
 from pyspark.ml.classification import LinearSVC
+from pyspark.ml.feature import StringIndexer, VectorAssembler
 from pyspark.sql import functions as F
 from pyspark.sql.functions import max, mean, min, stddev, lit, regexp_replace, col
 
@@ -938,18 +939,28 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
     columns = inpatient_scaled_w_imputation.drop('visit_occurrence_id').columns
     # this doesn't work
     # my_data = data_scaled_and_outcomes.withColumn("features", F.array(columns)).select("bad_outcome", "features")
-    my_data = data_scaled_and_outcomes.select(col("bad_outcome").alias('prediction'), F.struct(columns).alias('features'))
+    # this isnt the right format either
+    # my_data = data_scaled_and_outcomes.select(col("bad_outcome").alias('prediction'), F.struct(columns).alias('features'))
+    my_data = data_scaled_and_outcomes
+    my_data = my_data.withColumn('label', F.when(my_data.bad_outcome == True, 1).otherwise(0))
     train, test = my_data.randomSplit([0.7, 0.3], seed=my_random_state)
 
+    assembler = VectorAssembler(
+        inputCols= inpatient_scaled_w_imputation.drop('visit_occurrence_id').columns,
+        outputCol='features'
+    )
+    train = assembler.transform(train)
+    train = assembler.transform(test)
+
     ## LinearSVC(featuresCol='features', labelCol='label', predictionCol='prediction', maxIter=100, regParam=0.0, tol=1e-06, rawPredictionCol='rawPrediction', fitIntercept=True, standardization=True, threshold=0.0, weightCol=None, aggregationDepth=2)
-    lsvc = LinearSVC()
+    lsvc = LinearSVC(featuresCol='features', labelCol='label')
 #
     ## Fit the model
     lsvcModel = lsvc.fit(train)
 #
     ## Print the coefficients and intercept for linear SVC
-    print("Coefficients: " + str(lsvcModel.coefficients))
-    print("Intercept: " + str(lsvcModel.intercept))
+    #print("Coefficients: " + str(lsvcModel.coefficients))
+    #print("Intercept: " + str(lsvcModel.intercept))
 #
 #
     stop = timeit.default_timer()
