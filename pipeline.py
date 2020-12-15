@@ -757,7 +757,7 @@ def rf_gs( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation):
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
     parameters = {
-        'n_estimators':[250,400,500,600,750],
+        'n_estimators': range(400,1150,50),
         'criterion': ['gini', 'entropy'],
         'min_samples_split': range(2, 21),
         'max_features' : ['sqrt', 'log2']
