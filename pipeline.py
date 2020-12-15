@@ -935,7 +935,7 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
     y = my_outcomes.bad_outcome
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
-    columns = inpatient_scaled_w_imputation.columns
+    columns = inpatient_scaled_w_imputation.drop('visit_occurrence_id').columns
     my_data = data_scaled_and_outcomes.withColumn("features", F.array(columns)).select("bad_outcome", "features")
     train, test = my_data.randomSplit([0.7, 0.3], seed=my_random_state)
     
@@ -952,7 +952,7 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
     stop = timeit.default_timer()
     print('Time: ', stop - start)
     
-    return
+    return my_data
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.52b16a88-58d1-4d51-a8d8-114b020b870e"),
