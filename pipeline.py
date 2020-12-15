@@ -952,7 +952,7 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
     test = assembler.transform(test)
 
     ## LinearSVC(featuresCol='features', labelCol='label', predictionCol='prediction', maxIter=100, regParam=0.0, tol=1e-06, rawPredictionCol='rawPrediction', fitIntercept=True, standardization=True, threshold=0.0, weightCol=None, aggregationDepth=2)
-    lsvc = LinearSVC(featuresCol='features', labelCol='label')
+    lsvc = LinearSVC(featuresCol='features', labelCol='label', maxIter=1000)
 
     ## Fit the model
     model = lsvc.fit(train)
@@ -962,7 +962,7 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
     print("Intercept: " + str(model.intercept))
     
     # Compute raw scores on the test set
-    predictionAndLabels = test.map(lambda lp: (float(model.predict(lp.features)), lp.label))
+    predictionAndLabels = test.rdd.map(lambda lp: (float(model.predict(lp.features)), lp.label))
 
     # Instantiate metrics object
     metrics = BinaryClassificationMetrics(predictionAndLabels)
