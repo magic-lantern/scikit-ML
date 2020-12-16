@@ -843,7 +843,8 @@ def ridge_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 
     parameters = {
         'solver': ['svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga'],
-        'alpha': [0.001, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.65, 0.7, 0.75, 0.8, 0.9, 1.0, 10.0],
+        #'alpha': [0.001, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.65, 0.7, 0.75, 0.8, 0.9, 1.0, 10.0],
+        'alpha': np.arange(0.01, 0.3, 0.001)
     }
 
     rc = RidgeClassifier(random_state=my_random_state,
