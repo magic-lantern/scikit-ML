@@ -316,8 +316,7 @@ class SequentialFeatureSelector(SelectorMixin, MetaEstimatorMixin,
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.32069249-a675-4faf-9d3c-a68ff0670c07"),
-    inpatient_encoded_w_imputation=Input(rid="ri.foundry.main.dataset.02362acb-3a3b-4fd6-ad35-677c93bd57da"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_encoded_w_imputation=Input(rid="ri.foundry.main.dataset.02362acb-3a3b-4fd6-ad35-677c93bd57da")
 )
 def data_encoded_and_outcomes(inpatient_encoded_w_imputation, outcomes):
     i = inpatient_encoded_w_imputation
@@ -326,7 +325,7 @@ def data_encoded_and_outcomes(inpatient_encoded_w_imputation, outcomes):
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.bc823c17-fcdc-4801-a389-c6f476ed6971")
 )
 def data_scaled_and_outcomes(inpatient_scaled_w_imputation, outcomes):
     i = inpatient_scaled_w_imputation
@@ -335,8 +334,7 @@ def data_scaled_and_outcomes(inpatient_scaled_w_imputation, outcomes):
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.b260be3e-e48d-4428-9a44-e4ceb10113e5"),
-    inpatient_encoded_w_imputation=Input(rid="ri.foundry.main.dataset.02362acb-3a3b-4fd6-ad35-677c93bd57da"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_encoded_w_imputation=Input(rid="ri.foundry.main.dataset.02362acb-3a3b-4fd6-ad35-677c93bd57da")
 )
 def jun_to_oct_encoded_and_outcomes(inpatient_encoded_w_imputation, outcomes):
     i = inpatient_encoded_w_imputation
@@ -350,7 +348,7 @@ def jun_to_oct_encoded_and_outcomes(inpatient_encoded_w_imputation, outcomes):
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.bab694df-4318-4c0e-aa36-b0f4296c6360"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.bc823c17-fcdc-4801-a389-c6f476ed6971")
 )
 def jun_to_oct_scaled_and_outcomes(inpatient_scaled_w_imputation, outcomes):
     i = inpatient_scaled_w_imputation
@@ -365,7 +363,7 @@ def jun_to_oct_scaled_and_outcomes(inpatient_scaled_w_imputation, outcomes):
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.e0fd8f16-a131-4276-84c7-acc20e7f1829"),
     data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.bc823c17-fcdc-4801-a389-c6f476ed6971")
 )
 def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     data_and_outcomes = data_scaled_and_outcomes
@@ -480,7 +478,7 @@ def lr_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.6539e1fc-4c2d-47c1-bc55-96268abaa9ea"),
     data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.bc823c17-fcdc-4801-a389-c6f476ed6971")
 )
 def lr_rfe(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     data_and_outcomes = data_scaled_and_outcomes
@@ -513,7 +511,7 @@ def lr_rfe(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.32b0e775-ba50-44e2-ae82-5f41ec31a84c"),
     data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.bc823c17-fcdc-4801-a389-c6f476ed6971")
 )
 def lr_rfecv(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     data_and_outcomes = data_scaled_and_outcomes
@@ -557,8 +555,7 @@ def lr_rfecv(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.fd6475f7-d8dc-4601-a3ce-0e7e3d166da3"),
-    inpatient_encoded_w_imputation=Input(rid="ri.foundry.main.dataset.02362acb-3a3b-4fd6-ad35-677c93bd57da"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_encoded_w_imputation=Input(rid="ri.foundry.main.dataset.02362acb-3a3b-4fd6-ad35-677c93bd57da")
 )
 def mar_to_may_encoded_and_outcomes(inpatient_encoded_w_imputation, outcomes):
     i = inpatient_encoded_w_imputation
@@ -572,7 +569,7 @@ def mar_to_may_encoded_and_outcomes(inpatient_encoded_w_imputation, outcomes):
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.c0fd81e6-dc02-45b9-93fe-b0047394e4f8"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.bc823c17-fcdc-4801-a389-c6f476ed6971")
 )
 def mar_to_may_scaled_and_outcomes(inpatient_scaled_w_imputation, outcomes):
     i = inpatient_scaled_w_imputation
@@ -586,7 +583,6 @@ def mar_to_may_scaled_and_outcomes(inpatient_scaled_w_imputation, outcomes):
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.58c8d23e-5558-4347-98c6-e2dc0c7a6ef7"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c"),
     pca_rfecv_cols_umap_embedding=Input(rid="ri.foundry.main.dataset.438c95e7-3842-40a2-a718-4e9826193dd4")
 )
 def pca_rfecv_bad_outcome( outcomes, pca_rfecv_cols_umap_embedding):
@@ -631,7 +627,6 @@ def pca_rfecv_cols_umap_embedding(pca_rfecv_cols):
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.db9fda68-0d99-4cd5-8bc1-d2b01127a80d"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c"),
     pca_rfecv_cols_umap_embedding=Input(rid="ri.foundry.main.dataset.438c95e7-3842-40a2-a718-4e9826193dd4")
 )
 def pca_rfecv_severity( outcomes, pca_rfecv_cols_umap_embedding):
@@ -650,7 +645,6 @@ def pca_rfecv_severity( outcomes, pca_rfecv_cols_umap_embedding):
 
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.a7f3c4ad-c91b-4a90-9963-d466eb8f0e9d"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c"),
     pca_rfecv_cols_umap_embedding=Input(rid="ri.foundry.main.dataset.438c95e7-3842-40a2-a718-4e9826193dd4")
 )
 def pca_rfecv_site( outcomes, pca_rfecv_cols_umap_embedding):
@@ -674,8 +668,7 @@ def pca_rfecv_site( outcomes, pca_rfecv_cols_umap_embedding):
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.d152ad50-dd8b-4ea2-a0fd-36d3d7ef448d"),
     data_encoded_and_outcomes=Input(rid="ri.foundry.main.dataset.32069249-a675-4faf-9d3c-a68ff0670c07"),
-    inpatient_encoded_w_imputation=Input(rid="ri.foundry.main.dataset.02362acb-3a3b-4fd6-ad35-677c93bd57da"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_encoded_w_imputation=Input(rid="ri.foundry.main.dataset.02362acb-3a3b-4fd6-ad35-677c93bd57da")
 )
 def rf_best_hyp_params( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation):
     data_and_outcomes = data_encoded_and_outcomes
@@ -738,8 +731,7 @@ def rf_best_hyp_params( outcomes, data_encoded_and_outcomes, inpatient_encoded_w
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.13b585c9-f065-4065-bffe-dd4abaafcc56"),
     data_encoded_and_outcomes=Input(rid="ri.foundry.main.dataset.32069249-a675-4faf-9d3c-a68ff0670c07"),
-    inpatient_encoded_w_imputation=Input(rid="ri.foundry.main.dataset.02362acb-3a3b-4fd6-ad35-677c93bd57da"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_encoded_w_imputation=Input(rid="ri.foundry.main.dataset.02362acb-3a3b-4fd6-ad35-677c93bd57da")
 )
 def rf_gs( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation):
     start = timeit.default_timer()
@@ -823,7 +815,7 @@ def rf_gs( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation):
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.4a53657a-9f88-444f-ae48-575d388a6291"),
     data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.bc823c17-fcdc-4801-a389-c6f476ed6971")
 )
 def ridge_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     data_and_outcomes = data_scaled_and_outcomes
@@ -854,7 +846,7 @@ def ridge_gs(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.ca533b97-fde4-4d3f-a987-b2372e7f2894"),
     data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.bc823c17-fcdc-4801-a389-c6f476ed6971")
 )
 def sbs_knn(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
     data_and_outcomes = data_scaled_and_outcomes
@@ -919,7 +911,7 @@ def sbs_knn(data_scaled_and_outcomes, inpatient_scaled_w_imputation, outcomes):
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.beba4c4b-918a-4b53-ad98-26d24d844cb4"),
     data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.bc823c17-fcdc-4801-a389-c6f476ed6971")
 )
 def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     # getting data in right format is very tricky. some helpful links
@@ -974,7 +966,7 @@ def spark_svm(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation)
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.52b16a88-58d1-4d51-a8d8-114b020b870e"),
     data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.bc823c17-fcdc-4801-a389-c6f476ed6971")
 )
 def svm_feature_importance(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     start = timeit.default_timer()
@@ -1007,7 +999,7 @@ def svm_feature_importance(data_scaled_and_outcomes, outcomes, inpatient_scaled_
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.2fceafbf-2355-4cfc-b70b-843b185f2a58"),
     data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.bc823c17-fcdc-4801-a389-c6f476ed6971")
 )
 def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     start = timeit.default_timer()
@@ -1062,7 +1054,7 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.75ad0511-8391-4556-ad4c-ef26738d4db7"),
     data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.bc823c17-fcdc-4801-a389-c6f476ed6971")
 )
 def svm_linear_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     start = timeit.default_timer()
@@ -1113,7 +1105,7 @@ print(gd.best_params_)
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.650c6058-c34d-4668-95b7-659f666ff772"),
     data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.bc823c17-fcdc-4801-a389-c6f476ed6971")
 )
 def svm_rbf_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     start = timeit.default_timer()
@@ -1168,7 +1160,7 @@ def svm_rbf_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation
 @transform_pandas(
     Output(rid="ri.foundry.main.dataset.340dcc40-4295-472f-beee-38ab732af7aa"),
     data_scaled_and_outcomes=Input(rid="ri.foundry.main.dataset.b474df3d-909d-4a81-9e38-515e22b9cff3"),
-    outcomes=Input(rid="ri.foundry.main.dataset.3d9b1654-3923-484f-8db5-6b38b56e290c")
+    inpatient_scaled_w_imputation=Input(rid="ri.foundry.main.dataset.bc823c17-fcdc-4801-a389-c6f476ed6971")
 )
 def svm_sigmoid_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     start = timeit.default_timer()
