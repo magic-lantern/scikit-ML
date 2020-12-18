@@ -756,11 +756,14 @@ def rf_gs( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation):
     y = my_outcomes.bad_outcome
     x_train, x_test, y_train, y_test = train_test_split(my_data, y, test_size=0.3, random_state=1, stratify=y)
 
+    #{'criterion': 'entropy', 'max_features': 'sqrt', 'min_samples_split': 9, 'n_estimators': 750}
     parameters = {
-        'n_estimators': range(400,1150,50),
-        'criterion': ['gini', 'entropy'],
+        'n_estimators': range(450,1150,50),
+        #'criterion': ['gini', 'entropy'],
+        'criterion': ['entropy'],
         'min_samples_split': range(2, 21),
-        'max_features' : ['sqrt', 'log2']
+        #'max_features' : ['sqrt', 'log2']
+        'max_features' : ['sqrt']
     }
 
     rf = RandomForestClassifier(random_state=my_random_state)
