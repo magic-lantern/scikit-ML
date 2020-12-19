@@ -770,7 +770,7 @@ def rf_gs( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation):
     gd = GridSearchCV(estimator=rf,
                       param_grid=parameters,
                       cv=5,
-                      n_jobs=-1,
+                      n_jobs=16,
                       scoring='roc_auc',
                       verbose=2)
     # with n_jobs=5
