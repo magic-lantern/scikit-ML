@@ -758,7 +758,7 @@ def rf_gs( outcomes, data_encoded_and_outcomes, inpatient_encoded_w_imputation):
 
     #{'criterion': 'entropy', 'max_features': 'sqrt', 'min_samples_split': 9, 'n_estimators': 750}
     parameters = {
-        'n_estimators': range(450,1150,50),
+        'n_estimators': range(450,1150,25),
         #'criterion': ['gini', 'entropy'],
         'criterion': ['entropy'],
         'min_samples_split': range(2, 21),
