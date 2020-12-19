@@ -1039,7 +1039,8 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
         'gamma': ['scale'],
         #'gamma': ['scale', 'auto', 0.1, 0.2, 1.0],
         #'C': [0.01, 0.1, 0.5, 1.0, 5.0, 10.0]
-        'C': np.arange(0.1, 1.6, 0.025)
+        #'C': np.arange(0.1, 1.6, 0.025)
+        'C': np.arange(0.4, 0.6, 0.005)
     }
 
     # run time with default env and cache_size 1600 - 376 sec
