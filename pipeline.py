@@ -1052,7 +1052,7 @@ def svm_gs(data_scaled_and_outcomes, outcomes, inpatient_scaled_w_imputation):
     gd = GridSearchCV(estimator=svm,
                       param_grid=parameters,
                       cv=5,
-                      n_jobs=-1,
+                      n_jobs=16,
                       scoring='roc_auc')
     gd.fit(x_train, y_train)
     print(gd.best_params_)
